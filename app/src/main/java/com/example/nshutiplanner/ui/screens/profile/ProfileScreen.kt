@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.DarkMode
+import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -41,6 +43,8 @@ private val themeOptions = listOf(
 fun ProfileScreen(
     user: User?,
     repo: FirebaseRepository,
+    darkTheme: Boolean = false,
+    onToggleTheme: () -> Unit = {},
     onLogout: () -> Unit,
     onCareClick: () -> Unit
 ) {
@@ -157,6 +161,28 @@ fun ProfileScreen(
                         Icon(Icons.Rounded.Edit, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(14.dp))
                     }
                 }
+            }
+        }
+
+        // ── Theme Toggle ───────────────────────────────────────────────────
+        NshutiCard {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    if (darkTheme) Icons.Rounded.DarkMode else Icons.Rounded.LightMode,
+                    null, tint = LavenderDark, modifier = Modifier.size(22.dp)
+                )
+                Spacer(Modifier.width(10.dp))
+                Text(
+                    if (darkTheme) "Dark Mode" else "Light Mode",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.weight(1f)
+                )
+                Switch(
+                    checked = darkTheme,
+                    onCheckedChange = { onToggleTheme() },
+                    colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = LavenderDark)
+                )
             }
         }
 
