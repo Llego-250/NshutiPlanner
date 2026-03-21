@@ -129,7 +129,7 @@ private fun TaskItem(task: Task, currentUid: String, onProgressChange: (Float) -
 
         if (task.isCompleted && task.milestone.isNotEmpty()) {
             Spacer(Modifier.height(4.dp))
-            Surface(shape = RoundedCornerShape(8.dp), color = Mint.copy(alpha = 0.4f)) {
+            Surface(shape = RoundedCornerShape(8.dp), color = adaptiveMint().copy(alpha = 0.4f)) {
                 Text("🎉 ${task.milestone}", modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.bodyMedium)
             }
