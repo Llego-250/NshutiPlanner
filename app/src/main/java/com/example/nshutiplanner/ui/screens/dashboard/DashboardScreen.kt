@@ -21,7 +21,7 @@ import com.example.nshutiplanner.viewmodel.DashboardViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun DashboardScreen(vm: DashboardViewModel, user: User?, repo: com.example.nshutiplanner.data.repository.FirebaseRepository) {
+fun DashboardScreen(vm: DashboardViewModel, user: User?, repo: com.example.nshutiplanner.data.repository.FirebaseRepository, onCareClick: () -> Unit = {}) {
     val plans by vm.plans.collectAsState()
     val tasks by vm.tasks.collectAsState()
     val badges by vm.badges.collectAsState()
@@ -40,7 +40,19 @@ fun DashboardScreen(vm: DashboardViewModel, user: User?, repo: com.example.nshut
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        // Header
+        // Care Button top-left
+        IconButton(
+            onClick = onCareClick,
+            modifier = Modifier
+                .clip(androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
+                .background(LavenderDark)
+                .size(48.dp)
+        ) {
+            Icon(Icons.Rounded.Favorite, "Care", tint = Color.White)
+        }
+
+        Spacer(Modifier.height(12.dp))
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
