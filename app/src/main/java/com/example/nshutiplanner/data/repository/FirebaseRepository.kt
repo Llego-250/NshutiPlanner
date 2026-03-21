@@ -1,21 +1,20 @@
 package com.example.nshutiplanner.data.repository
 
+import android.content.Context
 import android.net.Uri
 import com.example.nshutiplanner.data.model.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
-class FirebaseRepository {
+class FirebaseRepository(private val context: Context) {
 
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
-    private val storage = FirebaseStorage.getInstance()
+    private val cloudinary = CloudinaryRepository(context)
 
     val currentUid get() = auth.currentUser?.uid ?: ""
 
@@ -52,19 +51,16 @@ class FirebaseRepository {
         db.collection("users").document(uid).update(updates).await()
     }
 
-    suspend fun uploadProfilePhoto(uri: Uri, uid: String): String {
-        val ref = storage.reference.child("profiles/$uid.jpg")
-        ref.putFile(uri).await()
-        return ref.downloadUrl.await().toString()
-    }
+    suspend fun uploadProfilePhoto(uri: Uri, uid: String): String =
+        cloudinary.upload(uri, folder = "nshuti/profiles")
 
     // ── Plans ─────────────────────────────────────────────────────────────────
 
     fun getPlans(coupleId: String): Flow<List<Plan>> = callbackFlow {
         val listener = db.collection("plans")
             .whereEqualTo("coupleId", coupleId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .addSnapshotListener { snap, _ ->
+            .addSnapshotListener { snap, err ->
+                if (err != null) { trySend(emptyList()); return@addSnapshotListener }
                 trySend(snap?.toObjects(Plan::class.java) ?: emptyList())
             }
         awaitClose { listener.remove() }
@@ -89,8 +85,8 @@ class FirebaseRepository {
     fun getTasks(coupleId: String): Flow<List<Task>> = callbackFlow {
         val listener = db.collection("tasks")
             .whereEqualTo("coupleId", coupleId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .addSnapshotListener { snap, _ ->
+            .addSnapshotListener { snap, err ->
+                if (err != null) { trySend(emptyList()); return@addSnapshotListener }
                 trySend(snap?.toObjects(Task::class.java) ?: emptyList())
             }
         awaitClose { listener.remove() }
@@ -116,7 +112,8 @@ class FirebaseRepository {
     fun getVisionItems(coupleId: String): Flow<List<VisionItem>> = callbackFlow {
         val listener = db.collection("vision")
             .whereEqualTo("coupleId", coupleId)
-            .addSnapshotListener { snap, _ ->
+            .addSnapshotListener { snap, err ->
+                if (err != null) { trySend(emptyList()); return@addSnapshotListener }
                 trySend(snap?.toObjects(VisionItem::class.java) ?: emptyList())
             }
         awaitClose { listener.remove() }
@@ -128,11 +125,8 @@ class FirebaseRepository {
         ref.set(item.copy(id = ref.id, coupleId = coupleId)).await()
     }
 
-    suspend fun uploadVisionImage(uri: Uri, coupleId: String): String {
-        val ref = storage.reference.child("vision/$coupleId/${System.currentTimeMillis()}.jpg")
-        ref.putFile(uri).await()
-        return ref.downloadUrl.await().toString()
-    }
+    suspend fun uploadVisionImage(uri: Uri, coupleId: String): String =
+        cloudinary.upload(uri, folder = "nshuti/vision/$coupleId")
 
     suspend fun deleteVisionItem(itemId: String) {
         db.collection("vision").document(itemId).delete().await()
@@ -143,8 +137,8 @@ class FirebaseRepository {
     fun getMessages(coupleId: String): Flow<List<Message>> = callbackFlow {
         val listener = db.collection("messages")
             .whereEqualTo("coupleId", coupleId)
-            .orderBy("timestamp", Query.Direction.ASCENDING)
-            .addSnapshotListener { snap, _ ->
+            .addSnapshotListener { snap, err ->
+                if (err != null) { trySend(emptyList()); return@addSnapshotListener }
                 trySend(snap?.toObjects(Message::class.java) ?: emptyList())
             }
         awaitClose { listener.remove() }
@@ -163,9 +157,8 @@ class FirebaseRepository {
     fun getMoods(coupleId: String): Flow<List<MoodEntry>> = callbackFlow {
         val listener = db.collection("moods")
             .whereEqualTo("coupleId", coupleId)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(14)
-            .addSnapshotListener { snap, _ ->
+            .addSnapshotListener { snap, err ->
+                if (err != null) { trySend(emptyList()); return@addSnapshotListener }
                 trySend(snap?.toObjects(MoodEntry::class.java) ?: emptyList())
             }
         awaitClose { listener.remove() }
@@ -176,7 +169,8 @@ class FirebaseRepository {
     fun getBadges(coupleId: String): Flow<List<Badge>> = callbackFlow {
         val listener = db.collection("badges")
             .whereEqualTo("coupleId", coupleId)
-            .addSnapshotListener { snap, _ ->
+            .addSnapshotListener { snap, err ->
+                if (err != null) { trySend(emptyList()); return@addSnapshotListener }
                 trySend(snap?.toObjects(Badge::class.java) ?: emptyList())
             }
         awaitClose { listener.remove() }
