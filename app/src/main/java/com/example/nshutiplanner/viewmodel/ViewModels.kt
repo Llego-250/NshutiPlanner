@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.nshutiplanner.NshutiFirebaseMessagingService
 import com.example.nshutiplanner.data.model.*
 import com.example.nshutiplanner.data.repository.FirebaseRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +25,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
 
     fun loadUser() = viewModelScope.launch {
         _currentUser.value = repo.getUser(repo.currentUid)
+        NshutiFirebaseMessagingService.saveFcmTokenIfAuthenticated()
     }
 
     fun logout() {
