@@ -16,6 +16,7 @@ lifecycleVm = "2.8.7"
 firebaseBom = "33.5.1"
 coil = "2.7.0"
 coroutines = "1.8.1"
+okhttp = "4.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +50,9 @@ firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging
 
 # Coil (image loading)
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+# OkHttp
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 
 # Coroutines
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
