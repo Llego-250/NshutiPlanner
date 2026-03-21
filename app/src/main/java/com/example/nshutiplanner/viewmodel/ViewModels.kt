@@ -1,5 +1,7 @@
 package com.example.nshutiplanner.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nshutiplanner.data.model.*
@@ -8,8 +10,8 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class AppViewModel : ViewModel() {
-    val repo = FirebaseRepository()
+class AppViewModel(app: Application) : AndroidViewModel(app) {
+    val repo = FirebaseRepository(app.applicationContext)
 
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser
