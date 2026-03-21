@@ -39,7 +39,8 @@ fun DashboardScreen(vm: DashboardViewModel, user: User?, repo: com.example.nshut
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .padding(WindowInsets.systemBars.asPaddingValues())
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         // Header
         Box(
