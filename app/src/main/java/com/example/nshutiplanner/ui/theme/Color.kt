@@ -2,36 +2,51 @@ package com.example.nshutiplanner.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Pastel Palette - Light
-val Lavender = Color(0xFFC9B8E8)
-val LavenderLight = Color(0xFFEDE7F6)
-val LavenderDark = Color(0xFF9575CD)
+// Primary — Deep Indigo / Electric Violet
+val Indigo900  = Color(0xFF120E35)
+val Indigo700  = Color(0xFF311B92)
+val Indigo500  = Color(0xFF6200EA) // Electric Violet
+val Indigo300  = Color(0xFF7C4DFF)
+val Indigo100  = Color(0xFFEDE7F6)
 
-val Teal = Color(0xFFB2DFDB)
-val TealLight = Color(0xFFE0F2F1)
-val TealDark = Color(0xFF00897B)
+// Accent — Coral / Rose
+val Coral500   = Color(0xFFFF4081) // Vivid Coral
+val Coral300   = Color(0xFFFF80AB)
+val Coral100   = Color(0xFFFCE4EC)
 
-val Peach = Color(0xFFFFCCBC)
-val PeachLight = Color(0xFFFBE9E7)
-val PeachDark = Color(0xFFFF7043)
+// Accent 2 — Cyan / Teal
+val Cyan500    = Color(0xFF00E5FF) // Electric Cyan
+val Cyan300    = Color(0xFF18FFFF)
+val Cyan100    = Color(0xFFE0F7FA)
 
-val Mint = Color(0xFFC8E6C9)
-val SoftPink = Color(0xFFF8BBD0)
-val SoftYellow = Color(0xFFFFF9C4)
+// Neutral
+val SurfaceLight = Color(0xFFFBFBFF)
+val SurfaceDark  = Color(0xFF0F0A24)
+val BackgroundDark = Color(0xFF080514)
+val CardDark     = Color(0xFF1C1540)
 
-val SurfaceLight = Color(0xFFFAF8FF)
-val SurfaceDark = Color(0xFF1A1625)
-val BackgroundDark = Color(0xFF120F1E)
-val CardDark = Color(0xFF2A2440)
+val TextPrimary   = Color(0xFF12082E)
+val TextSecondary = Color(0xFF6B5FA8)
+val TextOnDark    = Color(0xFFF0ECFF)
+val TextSubDark   = Color(0xFF9B8FCC)
 
-// Dark variants of pastel accent colors
-val LavenderLightDark = Color(0xFF2A2440)
-val TealLightDark = Color(0xFF1A2E2C)
-val PeachLightDark = Color(0xFF2E1F1A)
-val SoftPinkDark = Color(0xFF2E1A22)
-val SoftYellowDark = Color(0xFF2A2510)
-val MintDark = Color(0xFF1A2E1C)
+// Legacy aliases (used in Components/Screens)
+val LavenderDark  = Indigo500
+val LavenderLight = Indigo100
+val Lavender      = Indigo300
+val TealDark      = Cyan500
+val TealLight     = Cyan100
+val Teal          = Cyan300
+val PeachDark     = Coral500
+val PeachLight    = Coral100
+val Peach         = Coral300
+val SoftPink      = Coral100
+val SoftPinkDark  = Color(0xFF2E1020)
+val SoftYellow    = Color(0xFFFFF3E0)
+val SoftYellowDark = Color(0xFF1E1800)
+val Mint          = Cyan100
+val MintDark      = Color(0xFF0A1E1C)
 
-val TextPrimary = Color(0xFF2D2640)
-val TextSecondary = Color(0xFF6B6480)
-val TextOnDark = Color(0xFFF0EDF8)
+val LavenderLightDark = CardDark
+val TealLightDark     = Color(0xFF0A1E1C)
+val PeachLightDark    = Color(0xFF2E0A14)
