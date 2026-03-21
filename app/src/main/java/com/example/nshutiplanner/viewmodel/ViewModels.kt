@@ -24,6 +24,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun loadUser() = viewModelScope.launch {
+        repo.ensureProfile()
         _currentUser.value = repo.getUser(repo.currentUid)
         NshutiFirebaseMessagingService.saveFcmTokenIfAuthenticated()
     }
