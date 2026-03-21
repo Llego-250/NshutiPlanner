@@ -30,13 +30,64 @@ class FirebaseRepository(private val context: Context) {
     }
 
     suspend fun login(email: String, password: String): Result<Unit> = runCatching {
-        auth.signInWithEmailAndPassword(email, password).await()
+        val result = auth.signInWithEmailAndPassword(email, password).await()
+        val uid = result.user!!.uid
+        // Ensure Firestore document exists — creates it if the user signed up
+        // via a path that didn't write to Firestore (e.g. direct Auth creation)
+        val docRef = db.collection("users").document(uid)
+        val existing = docRef.get().await()
+        if (!existing.exists()) {
+            val user = User(
+                uid = uid,
+                displayName = result.user?.displayName ?: email.substringBefore("@"),
+                email = email.trim().lowercase(),
+                coupleId = uid
+            )
+            docRef.set(user).await()
+        } else if (existing.getString("email").isNullOrBlank()) {
+            // Document exists but email field is missing — patch it
+            docRef.update("email", email.trim().lowercase()).await()
+        }
     }
 
     fun logout() = auth.signOut()
 
     suspend fun getUser(uid: String): User? =
         db.collection("users").document(uid).get().await().toObject(User::class.java)
+
+    /**
+     * Ensures a Firestore document exists for the currently signed-in user.
+     * Called on every app launch — safe to call repeatedly (uses set with merge).
+     */
+    suspend fun ensureProfile(): User {
+        val firebaseUser = auth.currentUser ?: error("Not signed in")
+        val uid = firebaseUser.uid
+        val email = (firebaseUser.email ?: "").trim().lowercase()
+        val docRef = db.collection("users").document(uid)
+        val snap = docRef.get().await()
+
+        return if (!snap.exists()) {
+            // Document missing — create it now
+            val user = User(
+                uid = uid,
+                displayName = firebaseUser.displayName?.ifBlank { email.substringBefore("@") }
+                    ?: email.substringBefore("@"),
+                email = email,
+                coupleId = uid
+            )
+            docRef.set(user).await()
+            user
+        } else {
+            // Document exists — patch email if blank
+            val stored = snap.toObject(User::class.java) ?: User(uid = uid, email = email, coupleId = uid)
+            if (stored.email.isBlank() && email.isNotBlank()) {
+                docRef.update("email", email).await()
+                stored.copy(email = email)
+            } else {
+                stored
+            }
+        }
+    }
 
     suspend fun linkPartner(partnerEmail: String): Result<Unit> = runCatching {
         val normalizedEmail = partnerEmail.trim().lowercase()
