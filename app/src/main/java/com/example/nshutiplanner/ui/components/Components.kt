@@ -16,6 +16,20 @@ import com.example.nshutiplanner.data.model.Badge
 import com.example.nshutiplanner.ui.theme.*
 
 @Composable
+fun adaptiveColor(lightColor: Color, darkColor: Color): Color {
+    return if (isSystemInDarkTheme() || MaterialTheme.colorScheme.background == BackgroundDark)
+        darkColor else lightColor
+}
+
+// Adaptive pastel helpers
+@Composable fun adaptiveLavenderLight() = if (MaterialTheme.colorScheme.surface == SurfaceDark) LavenderLightDark else LavenderLight
+@Composable fun adaptiveTealLight() = if (MaterialTheme.colorScheme.surface == SurfaceDark) TealLightDark else TealLight
+@Composable fun adaptivePeachLight() = if (MaterialTheme.colorScheme.surface == SurfaceDark) PeachLightDark else PeachLight
+@Composable fun adaptiveSoftPink() = if (MaterialTheme.colorScheme.surface == SurfaceDark) SoftPinkDark else SoftPink
+@Composable fun adaptiveSoftYellow() = if (MaterialTheme.colorScheme.surface == SurfaceDark) SoftYellowDark else SoftYellow
+@Composable fun adaptiveMint() = if (MaterialTheme.colorScheme.surface == SurfaceDark) MintDark else Mint
+
+@Composable
 fun NshutiCard(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.surface,
