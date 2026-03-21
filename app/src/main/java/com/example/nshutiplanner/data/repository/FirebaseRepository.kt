@@ -48,6 +48,16 @@ class FirebaseRepository {
         db.collection("users").document(partner.uid).update("partnerId", currentUid, "coupleId", coupleId).await()
     }
 
+    suspend fun updateProfile(uid: String, updates: Map<String, Any>) {
+        db.collection("users").document(uid).update(updates).await()
+    }
+
+    suspend fun uploadProfilePhoto(uri: Uri, uid: String): String {
+        val ref = storage.reference.child("profiles/$uid.jpg")
+        ref.putFile(uri).await()
+        return ref.downloadUrl.await().toString()
+    }
+
     // ── Plans ─────────────────────────────────────────────────────────────────
 
     fun getPlans(coupleId: String): Flow<List<Plan>> = callbackFlow {
