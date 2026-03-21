@@ -2,7 +2,7 @@ package com.example.nshutiplanner.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Pastel Palette
+// Pastel Palette - Light
 val Lavender = Color(0xFFC9B8E8)
 val LavenderLight = Color(0xFFEDE7F6)
 val LavenderDark = Color(0xFF9575CD)
@@ -23,6 +23,14 @@ val SurfaceLight = Color(0xFFFAF8FF)
 val SurfaceDark = Color(0xFF1A1625)
 val BackgroundDark = Color(0xFF120F1E)
 val CardDark = Color(0xFF2A2440)
+
+// Dark variants of pastel accent colors
+val LavenderLightDark = Color(0xFF2A2440)
+val TealLightDark = Color(0xFF1A2E2C)
+val PeachLightDark = Color(0xFF2E1F1A)
+val SoftPinkDark = Color(0xFF2E1A22)
+val SoftYellowDark = Color(0xFF2A2510)
+val MintDark = Color(0xFF1A2E1C)
 
 val TextPrimary = Color(0xFF2D2640)
 val TextSecondary = Color(0xFF6B6480)
