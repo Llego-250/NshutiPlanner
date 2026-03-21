@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">NshutiPlanner</string>
+
+    <!-- Location Vibrate feature -->
+    <string name="location_permission_required_title">Location Permission Required</string>
+    <string name="location_permission_required_body">This feature needs access to your location to share it with your partner and send a vibration signal. Please grant location permission in app settings.</string>
+    <string name="location_permission_open_settings">Open Settings</string>
+    <string name="location_error_gps_timeout">Could not get your current location. Please ensure GPS is enabled and try again.</string>
+    <string name="location_error_write_failed">Failed to publish your location. Please check your connection and try again.</string>
+    <string name="location_error_receiver_unavailable">Your partner\'s location is not available yet. Ask them to open the app first.</string>
+    <string name="location_error_vibration_unavailable">Your partner\'s device is not reachable. Ask them to reopen the app to refresh their token.</string>
+    <string name="location_error_fcm_failed">Failed to send the vibration signal. Please try again.</string>
+    <string name="location_error_self_target">You cannot send a vibration to yourself.</string>
+    <string name="location_staleness_warning">Location may be outdated (&gt;30 min)</string>
+    <string name="location_success_vibration_sent">Vibration sent!</string>
+    <string name="location_error_generic">An unexpected error occurred. Please try again.</string>
+    <string name="location_retry">Retry</string>
 </resources>
