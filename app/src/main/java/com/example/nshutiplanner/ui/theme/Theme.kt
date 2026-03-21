@@ -11,41 +11,47 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColors = lightColorScheme(
-    primary = LavenderDark,
-    onPrimary = SurfaceLight,
-    primaryContainer = LavenderLight,
-    onPrimaryContainer = TextPrimary,
-    secondary = TealDark,
-    onSecondary = SurfaceLight,
-    secondaryContainer = TealLight,
-    onSecondaryContainer = TextPrimary,
-    tertiary = PeachDark,
-    tertiaryContainer = PeachLight,
+    primary = Indigo500,
+    onPrimary = Color.White,
+    primaryContainer = Indigo100,
+    onPrimaryContainer = Indigo900,
+    secondary = Cyan500,
+    onSecondary = Indigo900,
+    secondaryContainer = Cyan100,
+    onSecondaryContainer = Indigo900,
+    tertiary = Coral500,
+    onTertiary = Color.White,
+    tertiaryContainer = Coral100,
+    onTertiaryContainer = Indigo900,
     background = SurfaceLight,
     surface = SurfaceLight,
     onBackground = TextPrimary,
     onSurface = TextPrimary,
     onSurfaceVariant = TextSecondary,
-    outline = Lavender
+    outline = Indigo300,
+    error = Color(0xFFB00020)
 )
 
 private val DarkColors = darkColorScheme(
-    primary = Lavender,
-    onPrimary = SurfaceDark,
+    primary = Indigo300,
+    onPrimary = Indigo900,
     primaryContainer = CardDark,
-    onPrimaryContainer = TextOnDark,
-    secondary = Teal,
-    onSecondary = SurfaceDark,
+    onPrimaryContainer = Indigo100,
+    secondary = Cyan300,
+    onSecondary = Indigo900,
     secondaryContainer = CardDark,
-    onSecondaryContainer = TextOnDark,
-    tertiary = Peach,
+    onSecondaryContainer = Cyan100,
+    tertiary = Coral300,
+    onTertiary = Indigo900,
     tertiaryContainer = CardDark,
+    onTertiaryContainer = Coral100,
     background = BackgroundDark,
     surface = SurfaceDark,
     onBackground = TextOnDark,
     onSurface = TextOnDark,
-    onSurfaceVariant = Color(0xFFB0A8CC),
-    outline = Color(0xFF4A4260)
+    onSurfaceVariant = TextSubDark,
+    outline = Indigo700,
+    error = Color(0xFFCF6679)
 )
 
 @Composable
