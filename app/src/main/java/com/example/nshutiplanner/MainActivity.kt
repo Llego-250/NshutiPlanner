@@ -100,7 +100,9 @@ fun NshutiApp() {
             composable(Route.Dashboard.route) {
                 val vm: DashboardViewModel = viewModel(factory = VmFactory(appVm.repo))
                 LaunchedEffect(appVm.coupleId) { vm.init(appVm.coupleId) }
-                DashboardScreen(vm = vm, user = currentUser, repo = appVm.repo)
+                DashboardScreen(vm = vm, user = currentUser, repo = appVm.repo, onCareClick = {
+                        navController.navigate(Route.Care.route)
+                    })
             }
 
             composable(Route.Planner.route) {
