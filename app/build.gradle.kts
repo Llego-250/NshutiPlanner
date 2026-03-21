@@ -15,6 +15,10 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Read Maps API key from local.properties
+        val mapsKey = project.findProperty("MAPS_API_KEY")?.toString() ?: ""
+        manifestPlaceholders["MAPS_API_KEY"] = mapsKey
     }
 
     buildTypes {
@@ -66,6 +70,13 @@ dependencies {
 
     // OkHttp
     implementation(libs.okhttp)
+
+    // Google Maps Compose
+    implementation(libs.maps.compose)
+
+    // Play Services & AR
+    implementation(libs.play.services.location)
+    implementation(libs.google.arcore)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
