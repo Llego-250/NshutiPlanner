@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.foundation.layout.offset
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -30,6 +31,7 @@ import com.example.nshutiplanner.ui.navigation.*
 import com.example.nshutiplanner.ui.screens.auth.*
 import com.example.nshutiplanner.ui.screens.care.NshutiCareScreen
 import com.example.nshutiplanner.ui.screens.dashboard.DashboardScreen
+import com.example.nshutiplanner.ui.screens.location.LocationScreen
 import com.example.nshutiplanner.ui.screens.planner.PlannerScreen
 import com.example.nshutiplanner.ui.screens.profile.ProfileScreen
 import com.example.nshutiplanner.ui.screens.tasks.TasksScreen
@@ -65,6 +67,10 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
     val navBackStack by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStack?.destination?.route
     val showBottomBar = currentRoute in bottomNavItems.map { it.route }
+
+    val locationViewModel: LocationViewModel = viewModel(
+        factory = VmFactory(appVm.repo, LocalContext.current.applicationContext as android.app.Application)
+    )
 
     Scaffold(
         bottomBar = {
@@ -184,6 +190,10 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
                 val vm: CareViewModel = viewModel(factory = VmFactory(appVm.repo))
                 LaunchedEffect(appVm.coupleId) { vm.init(appVm.coupleId) }
                 NshutiCareScreen(vm = vm, currentUid = appVm.repo.currentUid, onBack = { navController.popBackStack() })
+            }
+
+            composable(Route.LocationVibrate.route) {
+                LocationScreen(viewModel = locationViewModel)
             }
         }
     }
