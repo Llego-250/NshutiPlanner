@@ -86,7 +86,7 @@ fun ProfileScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // ── Avatar & Name ──────────────────────────────────────────────────
-        NshutiCard(color = LavenderLight.copy(alpha = 0.5f)) {
+        NshutiCard(color = adaptiveLavenderLight().copy(alpha = 0.5f)) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
                 Box(contentAlignment = Alignment.BottomEnd) {
                     if (user?.photoUrl?.isNotEmpty() == true) {
@@ -228,7 +228,7 @@ fun ProfileScreen(
         }
 
         // ── Couple Dashboard ───────────────────────────────────────────────
-        NshutiCard(color = TealLight.copy(alpha = 0.4f)) {
+        NshutiCard(color = adaptiveTealLight().copy(alpha = 0.4f)) {
             SectionHeader("💑 Couple Progress")
             val totalTasks = tasks.size
             val doneTasks = tasks.count { it.isCompleted }
@@ -279,7 +279,7 @@ fun ProfileScreen(
         }
 
         // ── Quick Care Note ────────────────────────────────────────────────
-        NshutiCard(color = SoftPink.copy(alpha = 0.3f)) {
+        NshutiCard(color = adaptiveSoftPink().copy(alpha = 0.3f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text("Send a Care Note 💌", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
