@@ -13,6 +13,7 @@ sealed class Route(val route: String) {
     object Tasks : Route("tasks")
     object VisionBoard : Route("vision_board")
     object Care : Route("care")
+    object Profile : Route("profile")
 }
 
 data class BottomNavItem(
@@ -25,5 +26,5 @@ val bottomNavItems = listOf(
     BottomNavItem(Route.Dashboard.route, "Home", Icons.Rounded.Home),
     BottomNavItem(Route.Planner.route, "Planner", Icons.Rounded.CalendarMonth),
     BottomNavItem(Route.Tasks.route, "Tasks", Icons.Rounded.TaskAlt),
-    BottomNavItem(Route.VisionBoard.route, "Vision", Icons.Rounded.AutoAwesome)
+    BottomNavItem(Route.Profile.route, "Profile", Icons.Rounded.Person)
 )
