@@ -29,6 +29,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import com.example.nshutiplanner.ui.navigation.*
 import com.example.nshutiplanner.ui.screens.auth.*
+import com.example.nshutiplanner.ui.screens.splash.SplashScreen
 import com.example.nshutiplanner.ui.screens.care.NshutiCareScreen
 import com.example.nshutiplanner.ui.screens.dashboard.DashboardScreen
 import com.example.nshutiplanner.ui.screens.location.LocationScreen
@@ -49,8 +50,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             var darkTheme by remember { mutableStateOf(false) }
+            var showSplash by remember { mutableStateOf(true) }
             NshutiTheme(darkTheme = darkTheme) {
-                NshutiApp(darkTheme = darkTheme, onToggleTheme = { darkTheme = !darkTheme })
+                if (showSplash) {
+                    SplashScreen(onFinished = { showSplash = false })
+                } else {
+                    NshutiApp(darkTheme = darkTheme, onToggleTheme = { darkTheme = !darkTheme })
+                }
             }
         }
     }
