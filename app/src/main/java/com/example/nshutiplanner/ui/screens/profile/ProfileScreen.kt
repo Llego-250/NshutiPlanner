@@ -309,6 +309,66 @@ fun ProfileScreen(
             }
         }
 
+        // ── Link Partner ───────────────────────────────────────────────────
+        if (user?.partnerId.isNullOrEmpty()) {
+            var partnerEmail by remember { mutableStateOf("") }
+            var linkLoading by remember { mutableStateOf(false) }
+            var linkError by remember { mutableStateOf("") }
+            var linkSuccess by remember { mutableStateOf(false) }
+
+            NshutiCard(color = adaptiveLavenderLight().copy(alpha = 0.4f)) {
+                SectionHeader("💑 Link Your Partner")
+                Text(
+                    "Enter your partner's email to connect your accounts.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.height(10.dp))
+                OutlinedTextField(
+                    value = partnerEmail,
+                    onValueChange = { partnerEmail = it; linkError = "" },
+                    label = { Text("Partner's email") },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true,
+                    isError = linkError.isNotEmpty()
+                )
+                if (linkError.isNotEmpty()) {
+                    Text(linkError, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                }
+                if (linkSuccess) {
+                    Text("Partner linked successfully! 🎉", color = TealDark, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+                }
+                Spacer(Modifier.height(10.dp))
+                Button(
+                    onClick = {
+                        if (partnerEmail.isBlank()) { linkError = "Enter your partner's email"; return@Button }
+                        linkLoading = true; linkError = ""
+                        scope.launch {
+                            repo.linkPartner(partnerEmail.trim())
+                                .onSuccess { linkLoading = false; linkSuccess = true; onUserUpdated() }
+                                .onFailure { linkLoading = false; linkError = it.message ?: "Could not find partner" }
+                        }
+                    },
+                    enabled = !linkLoading,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = LavenderDark)
+                ) {
+                    if (linkLoading) CircularProgressIndicator(Modifier.size(18.dp), color = MaterialTheme.colorScheme.onPrimary, strokeWidth = 2.dp)
+                    else Text("Link Partner")
+                }
+            }
+        } else {
+            NshutiCard(color = adaptiveTealLight().copy(alpha = 0.3f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Rounded.Favorite, null, tint = TealDark, modifier = Modifier.size(20.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text("Partner linked 💑", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold, color = TealDark)
+                }
+            }
+        }
+
         // ── Logout ─────────────────────────────────────────────────────────
         OutlinedButton(
             onClick = onLogout,
