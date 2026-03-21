@@ -104,7 +104,7 @@ fun PlannerScreen(vm: PlannerViewModel, currentUid: String, onVisionClick: () ->
 @Composable
 private fun PlanItem(plan: Plan, currentUid: String, onToggle: () -> Unit, onDelete: () -> Unit) {
     val isOwn = plan.createdBy == currentUid
-    NshutiCard(color = if (plan.isCompleted) Mint.copy(alpha = 0.3f) else MaterialTheme.colorScheme.surface) {
+    NshutiCard(color = if (plan.isCompleted) adaptiveMint().copy(alpha = 0.3f) else MaterialTheme.colorScheme.surface) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = plan.isCompleted,
