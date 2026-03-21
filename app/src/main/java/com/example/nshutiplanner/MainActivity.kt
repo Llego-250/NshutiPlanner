@@ -35,15 +35,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            NshutiTheme {
-                NshutiApp()
+            var darkTheme by remember { mutableStateOf(false) }
+            NshutiTheme(darkTheme = darkTheme) {
+                NshutiApp(darkTheme = darkTheme, onToggleTheme = { darkTheme = !darkTheme })
             }
         }
     }
 }
 
 @Composable
-fun NshutiApp() {
+fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
     val appVm: AppViewModel = viewModel()
     val navController = rememberNavController()
     val currentUser by appVm.currentUser.collectAsState()
@@ -130,6 +131,8 @@ fun NshutiApp() {
                 ProfileScreen(
                     user = currentUser,
                     repo = appVm.repo,
+                    darkTheme = darkTheme,
+                    onToggleTheme = onToggleTheme,
                     onLogout = {
                         appVm.logout()
                         navController.navigate(Route.Login.route) {
