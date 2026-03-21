@@ -29,7 +29,7 @@ private val dailyPrompts = listOf(
 )
 
 @Composable
-fun NshutiCareScreen(vm: CareViewModel, currentUid: String) {
+fun NshutiCareScreen(vm: CareViewModel, currentUid: String, onBack: () -> Unit = {}) {
     val messages by vm.messages.collectAsState()
     val moods by vm.moods.collectAsState()
     var text by remember { mutableStateOf("") }
@@ -42,6 +42,16 @@ fun NshutiCareScreen(vm: CareViewModel, currentUid: String) {
     }
 
     Column(Modifier.fillMaxSize()) {
+        // Back button
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBack) {
+                Icon(Icons.Rounded.ArrowBackIosNew, "Back", tint = MaterialTheme.colorScheme.onSurface)
+            }
+            Text("NshutiCare 💜", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+        }
         // Tab Header
         TabRow(selectedTabIndex = selectedTab, containerColor = MaterialTheme.colorScheme.surface) {
             Tab(selected = selectedTab == 0, onClick = { selectedTab = 0 },
