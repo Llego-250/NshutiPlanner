@@ -20,14 +20,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import coil.compose.AsyncImage
 import com.example.nshutiplanner.data.model.VisionItem
-import com.example.nshutiplanner.ui.components.NshutiCard
-import com.example.nshutiplanner.ui.components.SectionHeader
+import com.example.nshutiplanner.ui.components.*
 import com.example.nshutiplanner.ui.screens.planner.EmptyState
 import com.example.nshutiplanner.ui.theme.*
 import com.example.nshutiplanner.viewmodel.VisionViewModel
 
 @Composable
-fun VisionBoardScreen(vm: VisionViewModel, currentUid: String) {
+fun VisionBoardScreen(vm: VisionViewModel, currentUid: String, onBack: () -> Unit = {}) {
     val items by vm.items.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
     var dialogType by remember { mutableStateOf("quote") }
@@ -43,12 +42,12 @@ fun VisionBoardScreen(vm: VisionViewModel, currentUid: String) {
             Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 SmallFloatingActionButton(
                     onClick = { imagePicker.launch("image/*") },
-                    containerColor = TealLight,
+                    containerColor = adaptiveTealLight(),
                     contentColor = TealDark
                 ) { Icon(Icons.Rounded.Image, "Add Image") }
                 SmallFloatingActionButton(
                     onClick = { dialogType = "goal"; showDialog = true },
-                    containerColor = PeachLight,
+                    containerColor = adaptivePeachLight(),
                     contentColor = PeachDark
                 ) { Icon(Icons.Rounded.Flag, "Add Goal") }
                 FloatingActionButton(
@@ -61,7 +60,12 @@ fun VisionBoardScreen(vm: VisionViewModel, currentUid: String) {
         }
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
-            SectionHeader("🌟 Vision Board")
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.Rounded.ArrowBackIosNew, "Back", tint = MaterialTheme.colorScheme.onSurface)
+                }
+                SectionHeader("🌟 Vision Board", modifier = Modifier.weight(1f))
+            }
             Text("Your shared dreams & inspirations",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -99,9 +103,9 @@ fun VisionBoardScreen(vm: VisionViewModel, currentUid: String) {
 @Composable
 private fun VisionItemCard(item: VisionItem, currentUid: String, onDelete: () -> Unit) {
     val bgColor = when (item.type) {
-        "quote" -> LavenderLight
-        "goal" -> PeachLight
-        else -> TealLight
+        "quote" -> adaptiveLavenderLight()
+        "goal" -> adaptivePeachLight()
+        else -> adaptiveTealLight()
     }
     val isOwn = item.addedBy == currentUid
 
@@ -126,7 +130,7 @@ private fun VisionItemCard(item: VisionItem, currentUid: String, onDelete: () ->
             ) {
                 Text("❝", fontSize = 24.sp, color = LavenderDark)
                 Text(item.content, style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center, color = TextPrimary, fontWeight = FontWeight.Medium)
+                    textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Medium)
             }
             "goal" -> Column(
                 Modifier.fillMaxSize().padding(12.dp),
@@ -136,7 +140,7 @@ private fun VisionItemCard(item: VisionItem, currentUid: String, onDelete: () ->
                 Text("🎯", fontSize = 28.sp)
                 Spacer(Modifier.height(6.dp))
                 Text(item.content, style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center, color = TextPrimary, fontWeight = FontWeight.SemiBold)
+                    textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
             }
         }
 
