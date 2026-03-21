@@ -17,6 +17,9 @@ firebaseBom = "33.5.1"
 coil = "2.7.0"
 coroutines = "1.8.1"
 okhttp = "4.12.0"
+mapsCompose = "4.3.3"
+playServicesLocation = "21.3.0"
+arcore = "1.47.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,8 +57,15 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 # OkHttp
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 
+# Google Maps Compose
+maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "mapsCompose" }
+
 # Coroutines
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+
+# Play Services & AR
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+google-arcore = { group = "com.google.ar", name = "core", version.ref = "arcore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
