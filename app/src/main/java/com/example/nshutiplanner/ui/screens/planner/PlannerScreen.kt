@@ -21,7 +21,7 @@ import com.example.nshutiplanner.viewmodel.PlannerViewModel
 import java.time.LocalDate
 
 @Composable
-fun PlannerScreen(vm: PlannerViewModel, currentUid: String) {
+fun PlannerScreen(vm: PlannerViewModel, currentUid: String, onVisionClick: () -> Unit = {}) {
     val plans by vm.plans.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
     var isWeeklyTab by remember { mutableStateOf(false) }
@@ -40,7 +40,17 @@ fun PlannerScreen(vm: PlannerViewModel, currentUid: String) {
         }
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
-            SectionHeader("📅 Planner")
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                SectionHeader("📅 Planner", modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = onVisionClick,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(LavenderLight)
+                ) {
+                    Icon(Icons.Rounded.AutoAwesome, "Vision Board", tint = LavenderDark)
+                }
+            }
 
             // Tab Row
             Row(
