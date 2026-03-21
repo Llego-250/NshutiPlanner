@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,11 +13,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -179,20 +181,46 @@ fun PillNavigationBar(
     items: List<BottomNavItem>,
     onNavigate: (String) -> Unit
 ) {
-    val bgColor = Color(0xFF1A1625)
+    val isDark = MaterialTheme.colorScheme.surface == com.example.nshutiplanner.ui.theme.SurfaceDark
+    val glassBase = if (isDark) Color(0xFF1A1625) else Color(0xFFFFFFFF)
+    val glassBorder = if (isDark) Color(0x40B0A8CC) else Color(0x60FFFFFF)
+    val glassHighlight = if (isDark) Color(0x15FFFFFF) else Color(0x80FFFFFF)
     val activeColor = LavenderDark
-    val inactiveColor = Color(0xFFB0A8CC)
+    val inactiveColor = if (isDark) Color(0xFFB0A8CC) else Color(0xFF6B6480)
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = 20.dp, vertical = 12.dp),
         contentAlignment = Alignment.Center
     ) {
+        // Blur glow behind
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .blur(24.dp)
+                .clip(RoundedCornerShape(50.dp))
+                .background(glassBase.copy(alpha = 0.5f))
+        )
+        // Glass pill
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(50.dp))
-                .background(bgColor)
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            glassHighlight,
+                            glassBase.copy(alpha = if (isDark) 0.88f else 0.72f)
+                        )
+                    )
+                )
+                .border(
+                    width = 1.dp,
+                    brush = Brush.verticalGradient(
+                        listOf(glassBorder, Color.Transparent)
+                    ),
+                    shape = RoundedCornerShape(50.dp)
+                )
                 .padding(horizontal = 8.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -203,7 +231,12 @@ fun PillNavigationBar(
                     Row(
                         modifier = Modifier
                             .clip(RoundedCornerShape(50.dp))
-                            .background(activeColor)
+                            .background(
+                                Brush.linearGradient(
+                                    listOf(activeColor, activeColor.copy(alpha = 0.8f))
+                                )
+                            )
+                            .border(1.dp, Color.White.copy(alpha = 0.25f), RoundedCornerShape(50.dp))
                             .clickable { onNavigate(item.route) }
                             .padding(horizontal = 20.dp, vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically,
