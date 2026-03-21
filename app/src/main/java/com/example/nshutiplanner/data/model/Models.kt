@@ -11,7 +11,8 @@ data class User(
     val photoUrl: String = "",
     val motto: String = "",
     val themeColor: String = "lavender",
-    val currentMood: Int = 3
+    val currentMood: Int = 3,
+    val fcmToken: String = ""
 )
 
 data class Plan(
@@ -95,3 +96,20 @@ object BadgeDefinitions {
         Badge(id = "health_champ", title = "Health Champion", description = "Completed 5 health tasks", icon = "💪")
     )
 }
+
+data class LocationRecord(
+    val uid: String = "",
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
+    val accuracyMetres: Float = 0f,
+    val updatedAt: Timestamp = Timestamp.now()
+)
+
+enum class Role { SENDER, RECEIVER }
+
+data class Actor(
+    val uid: String = "",
+    val displayName: String = "",
+    val fcmToken: String = "",
+    val role: Role = Role.SENDER
+)
