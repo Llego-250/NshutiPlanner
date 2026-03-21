@@ -37,10 +37,10 @@ fun NshutiCard(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(containerColor = color),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        content = { Column(modifier = Modifier.padding(16.dp), content = content) }
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        content = { Column(modifier = Modifier.padding(20.dp), content = content) }
     )
 }
 
@@ -59,15 +59,15 @@ fun PastelIconButton(
     ) {
         Box(
             modifier = Modifier
-                .size(56.dp)
+                .size(64.dp)
                 .clip(CircleShape)
                 .background(background),
             contentAlignment = Alignment.Center
         ) {
-            Icon(icon, contentDescription = label, tint = tint, modifier = Modifier.size(28.dp))
+            Icon(icon, contentDescription = label, tint = tint, modifier = Modifier.size(32.dp))
         }
-        Spacer(Modifier.height(4.dp))
-        Text(label, style = MaterialTheme.typography.labelSmall, color = tint)
+        Spacer(Modifier.height(8.dp))
+        Text(label, style = MaterialTheme.typography.labelMedium, color = tint, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -85,15 +85,15 @@ fun NshutiProgressBar(
     )
     Column(modifier = modifier) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(label, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
+            Text(label, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Text("${(animatedProgress * 100).toInt()}%", style = MaterialTheme.typography.labelLarge, color = color)
         }
-        Spacer(Modifier.height(6.dp))
+        Spacer(Modifier.height(8.dp))
         LinearProgressIndicator(
             progress = { animatedProgress },
-            modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)),
+            modifier = Modifier.fillMaxWidth().height(12.dp).clip(RoundedCornerShape(6.dp)),
             color = color,
-            trackColor = color.copy(alpha = 0.2f)
+            trackColor = color.copy(alpha = 0.15f)
         )
     }
 }
@@ -103,14 +103,15 @@ fun BadgeChip(badge: Badge) {
     Surface(
         shape = RoundedCornerShape(50.dp),
         color = MaterialTheme.colorScheme.primaryContainer,
-        modifier = Modifier.padding(4.dp)
+        modifier = Modifier.padding(4.dp),
+        shadowElevation = 2.dp
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(badge.icon, fontSize = 16.sp)
-            Spacer(Modifier.width(6.dp))
+            Text(badge.icon, fontSize = 18.sp)
+            Spacer(Modifier.width(8.dp))
             Text(badge.title, style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onPrimaryContainer)
         }
@@ -120,18 +121,18 @@ fun BadgeChip(badge: Badge) {
 @Composable
 fun MoodSelector(selected: Int, onSelect: (Int) -> Unit) {
     val moods = listOf("😢" to 1, "😕" to 2, "😐" to 3, "🙂" to 4, "😄" to 5)
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         moods.forEach { (emoji, value) ->
             val isSelected = selected == value
             Box(
                 modifier = Modifier
-                    .size(44.dp)
+                    .size(52.dp)
                     .clip(CircleShape)
                     .background(if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant)
                     .clickable { onSelect(value) },
                 contentAlignment = Alignment.Center
             ) {
-                Text(emoji, fontSize = 22.sp)
+                Text(emoji, fontSize = 26.sp)
             }
         }
     }
@@ -142,7 +143,7 @@ fun CategoryChip(label: String, selected: Boolean, color: Color, onClick: () -> 
     FilterChip(
         selected = selected,
         onClick = onClick,
-        label = { Text(label, style = MaterialTheme.typography.labelLarge) },
+        label = { Text(label, style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(vertical = 4.dp)) },
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = color,
             selectedLabelColor = Color.White
@@ -155,8 +156,8 @@ fun CategoryChip(label: String, selected: Boolean, color: Color, onClick: () -> 
 fun SectionHeader(title: String, modifier: Modifier = Modifier) {
     Text(
         title,
-        style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight.Bold,
-        modifier = modifier.padding(vertical = 8.dp)
+        style = MaterialTheme.typography.headlineSmall,
+        fontWeight = FontWeight.ExtraBold,
+        modifier = modifier.padding(vertical = 12.dp)
     )
 }
