@@ -62,9 +62,15 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
     val showBottomBar = currentRoute in bottomNavItems.map { it.route }
 
     Scaffold(
+        containerColor = Color.Transparent,
         bottomBar = {
             if (showBottomBar) {
-                Box {
+                Surface(
+                    color = Color.Transparent,
+                    shadowElevation = 0.dp,
+                    tonalElevation = 0.dp
+                ) {
+                    Box {
                     PillNavigationBar(currentRoute, bottomNavItems) { route ->
                         navController.navigate(route) {
                             popUpTo(navController.graph.findStartDestination().id) { saveState = true }
@@ -89,8 +95,6 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
                     }
                 }
             }
-        }
-    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = startDestination,
