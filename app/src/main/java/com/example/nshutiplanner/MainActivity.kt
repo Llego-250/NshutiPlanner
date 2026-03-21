@@ -23,6 +23,7 @@ import com.example.nshutiplanner.ui.screens.auth.*
 import com.example.nshutiplanner.ui.screens.care.NshutiCareScreen
 import com.example.nshutiplanner.ui.screens.dashboard.DashboardScreen
 import com.example.nshutiplanner.ui.screens.planner.PlannerScreen
+import com.example.nshutiplanner.ui.screens.profile.ProfileScreen
 import com.example.nshutiplanner.ui.screens.tasks.TasksScreen
 import com.example.nshutiplanner.ui.screens.visionboard.VisionBoardScreen
 import com.example.nshutiplanner.ui.theme.LavenderDark
@@ -108,7 +109,9 @@ fun NshutiApp() {
             composable(Route.Planner.route) {
                 val vm: PlannerViewModel = viewModel(factory = VmFactory(appVm.repo))
                 LaunchedEffect(appVm.coupleId) { vm.init(appVm.coupleId) }
-                PlannerScreen(vm = vm, currentUid = appVm.repo.currentUid)
+                PlannerScreen(vm = vm, currentUid = appVm.repo.currentUid, onVisionClick = {
+                    navController.navigate(Route.VisionBoard.route)
+                })
             }
 
             composable(Route.Tasks.route) {
@@ -121,6 +124,20 @@ fun NshutiApp() {
                 val vm: VisionViewModel = viewModel(factory = VmFactory(appVm.repo))
                 LaunchedEffect(appVm.coupleId) { vm.init(appVm.coupleId) }
                 VisionBoardScreen(vm = vm, currentUid = appVm.repo.currentUid)
+            }
+
+            composable(Route.Profile.route) {
+                ProfileScreen(
+                    user = currentUser,
+                    repo = appVm.repo,
+                    onLogout = {
+                        appVm.logout()
+                        navController.navigate(Route.Login.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    },
+                    onCareClick = { navController.navigate(Route.Care.route) }
+                )
             }
 
             composable(Route.Care.route) {
