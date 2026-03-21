@@ -24,7 +24,7 @@ class FirebaseRepository(private val context: Context) {
         val result = auth.createUserWithEmailAndPassword(email, password).await()
         val uid = result.user!!.uid
         val coupleId = uid  // solo until partner links
-        val user = User(uid = uid, displayName = name, email = email, coupleId = coupleId)
+        val user = User(uid = uid, displayName = name, email = email.trim().lowercase(), coupleId = coupleId)
         db.collection("users").document(uid).set(user).await()
         user
     }
@@ -39,12 +39,36 @@ class FirebaseRepository(private val context: Context) {
         db.collection("users").document(uid).get().await().toObject(User::class.java)
 
     suspend fun linkPartner(partnerEmail: String): Result<Unit> = runCatching {
-        val snap = db.collection("users").whereEqualTo("email", partnerEmail).get().await()
-        val partner = snap.documents.firstOrNull()?.toObject(User::class.java)
-            ?: error("Partner not found")
+        val normalizedEmail = partnerEmail.trim().lowercase()
+
+        // Try exact match first
+        var snap = db.collection("users").whereEqualTo("email", normalizedEmail).get().await()
+
+        // Fallback: original casing (in case stored with uppercase)
+        if (snap.isEmpty) {
+            snap = db.collection("users").whereEqualTo("email", partnerEmail.trim()).get().await()
+        }
+
+        // Fallback: scan all users and compare email case-insensitively
+        // (handles accounts where email was stored with different casing)
+        val partner: User = if (!snap.isEmpty) {
+            snap.documents.firstOrNull()?.toObject(User::class.java)
+                ?: error("Partner not found")
+        } else {
+            val allUsers = db.collection("users").get().await()
+            allUsers.documents
+                .mapNotNull { it.toObject(User::class.java) }
+                .firstOrNull { it.email.trim().lowercase() == normalizedEmail }
+                ?: error("Partner not found. Make sure they have signed up with this email.")
+        }
+
+        if (partner.uid == currentUid) error("You cannot link yourself as a partner.")
+
         val coupleId = listOf(currentUid, partner.uid).sorted().joinToString("_")
-        db.collection("users").document(currentUid).update("partnerId", partner.uid, "coupleId", coupleId).await()
-        db.collection("users").document(partner.uid).update("partnerId", currentUid, "coupleId", coupleId).await()
+        db.collection("users").document(currentUid)
+            .update("partnerId", partner.uid, "coupleId", coupleId).await()
+        db.collection("users").document(partner.uid)
+            .update("partnerId", currentUid, "coupleId", coupleId).await()
     }
 
     suspend fun updateProfile(uid: String, updates: Map<String, Any>) {
