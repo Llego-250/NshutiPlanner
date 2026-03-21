@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "388241152045",
+    "project_id": "nshutitracker",
+    "storage_bucket": "nshutitracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388241152045:android:f7f3a1ead0eca110ae80a4",
+        "android_client_info": {
+          "package_name": "com.example.nshutiplanner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2gXNkwStr-0S2mSJBoihQS67HBGU2NsA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
