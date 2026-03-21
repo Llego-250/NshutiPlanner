@@ -1,6 +1,8 @@
 package com.example.nshutiplanner.ui.screens.profile
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
@@ -28,8 +30,6 @@ import com.example.nshutiplanner.ui.components.*
 import com.example.nshutiplanner.ui.theme.*
 import com.example.nshutiplanner.viewmodel.CareViewModel
 import com.example.nshutiplanner.viewmodel.DashboardViewModel
-import com.example.nshutiplanner.viewmodel.VmFactory
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 
 private val moodEmojis = mapOf(1 to "😢", 2 to "😕", 3 to "😐", 4 to "🙂", 5 to "😄")
@@ -43,21 +43,15 @@ private val themeOptions = listOf(
 fun ProfileScreen(
     user: User?,
     repo: FirebaseRepository,
+    dashVm: DashboardViewModel,
+    careVm: CareViewModel,
     darkTheme: Boolean = false,
     onToggleTheme: () -> Unit = {},
     onLogout: () -> Unit,
-    onCareClick: () -> Unit
+    onCareClick: () -> Unit,
+    onUserUpdated: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
-    val dashVm: DashboardViewModel = viewModel(factory = VmFactory(repo))
-    val careVm: CareViewModel = viewModel(factory = VmFactory(repo))
-
-    LaunchedEffect(user?.coupleId) {
-        user?.coupleId?.let {
-            dashVm.init(it)
-            careVm.init(it)
-        }
-    }
 
     val plans by dashVm.plans.collectAsState()
     val tasks by dashVm.tasks.collectAsState()
@@ -69,13 +63,22 @@ fun ProfileScreen(
     var selectedMood by remember(user?.currentMood) { mutableIntStateOf(user?.currentMood ?: 3) }
     var showThemePicker by remember { mutableStateOf(false) }
 
+    var uploadError by remember { mutableStateOf("") }
+
     val photoLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             scope.launch {
-                val url = repo.uploadProfilePhoto(it, repo.currentUid)
-                repo.updateProfile(repo.currentUid, mapOf("photoUrl" to url))
+                runCatching {
+                    val url = repo.uploadProfilePhoto(it, repo.currentUid)
+                    repo.updateProfile(repo.currentUid, mapOf("photoUrl" to url))
+                    onUserUpdated()
+                }.onFailure { e -> uploadError = e.message ?: "Upload failed" }
             }
         }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) photoLauncher.launch("image/*")
     }
 
     Column(
@@ -108,7 +111,13 @@ fun ProfileScreen(
                         }
                     }
                     IconButton(
-                        onClick = { photoLauncher.launch("image/*") },
+                        onClick = {
+                            val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                                Manifest.permission.READ_MEDIA_IMAGES
+                            else
+                                Manifest.permission.READ_EXTERNAL_STORAGE
+                            permissionLauncher.launch(permission)
+                        },
                         modifier = Modifier.size(28.dp).clip(CircleShape).background(LavenderDark)
                     ) {
                         Icon(Icons.Rounded.CameraAlt, null, tint = Color.White, modifier = Modifier.size(14.dp))
@@ -117,6 +126,9 @@ fun ProfileScreen(
                 Spacer(Modifier.height(10.dp))
                 Text(user?.displayName ?: "", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 Text(user?.email ?: "", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                if (uploadError.isNotEmpty()) {
+                    Text(uploadError, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                }
 
                 Spacer(Modifier.height(10.dp))
 
