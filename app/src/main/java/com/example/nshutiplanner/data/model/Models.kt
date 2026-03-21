@@ -110,6 +110,7 @@ enum class Role { SENDER, RECEIVER }
 data class Actor(
     val uid: String = "",
     val displayName: String = "",
+    val photoUrl: String = "",
     val fcmToken: String = "",
     val role: Role = Role.SENDER
 )
