@@ -84,7 +84,7 @@ private fun ChatTab(
 
     Column(Modifier.fillMaxSize()) {
         // Daily Prompt Banner
-        Surface(color = LavenderLight, modifier = Modifier.fillMaxWidth()) {
+        Surface(color = adaptiveLavenderLight(), modifier = Modifier.fillMaxWidth()) {
             Row(
                 Modifier.padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -203,7 +203,7 @@ private fun MoodTab(moods: List<com.example.nshutiplanner.data.model.MoodEntry>,
             moods.forEach { entry ->
                 val isOwn = entry.userId == currentUid
                 NshutiCard(
-                    color = if (isOwn) LavenderLight.copy(alpha = 0.5f) else PeachLight.copy(alpha = 0.5f),
+                    color = if (isOwn) adaptiveLavenderLight().copy(alpha = 0.5f) else adaptivePeachLight().copy(alpha = 0.5f),
                     modifier = Modifier.padding(bottom = 8.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
