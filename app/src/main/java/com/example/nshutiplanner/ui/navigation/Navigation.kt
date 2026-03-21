@@ -25,6 +25,5 @@ val bottomNavItems = listOf(
     BottomNavItem(Route.Dashboard.route, "Home", Icons.Rounded.Home),
     BottomNavItem(Route.Planner.route, "Planner", Icons.Rounded.CalendarMonth),
     BottomNavItem(Route.Tasks.route, "Tasks", Icons.Rounded.TaskAlt),
-    BottomNavItem(Route.VisionBoard.route, "Vision", Icons.Rounded.AutoAwesome),
-    BottomNavItem(Route.Care.route, "Care", Icons.Rounded.Favorite)
+    BottomNavItem(Route.VisionBoard.route, "Vision", Icons.Rounded.AutoAwesome)
 )
