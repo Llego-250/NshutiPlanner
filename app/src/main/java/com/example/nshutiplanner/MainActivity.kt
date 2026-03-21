@@ -9,8 +9,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,6 +17,9 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -33,7 +34,6 @@ import com.example.nshutiplanner.ui.screens.tasks.TasksScreen
 import com.example.nshutiplanner.ui.screens.visionboard.VisionBoardScreen
 import com.example.nshutiplanner.ui.theme.LavenderDark
 import com.example.nshutiplanner.ui.theme.NshutiTheme
-import com.example.nshutiplanner.ui.theme.SurfaceDark
 import com.example.nshutiplanner.viewmodel.*
 
 class MainActivity : ComponentActivity() {
@@ -62,35 +62,29 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
     val showBottomBar = currentRoute in bottomNavItems.map { it.route }
 
     Scaffold(
-        containerColor = Color.Transparent,
         bottomBar = {
             if (showBottomBar) {
-                Surface(
-                    color = Color.Transparent,
-                    shadowElevation = 0.dp,
-                    tonalElevation = 0.dp
-                ) {
-                    Box {
-                        PillNavigationBar(currentRoute, bottomNavItems) { route ->
-                            navController.navigate(route) {
-                                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                Box {
+                    PillNavigationBar(currentRoute, bottomNavItems) { route ->
+                        navController.navigate(route) {
+                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        if (currentRoute == Route.Dashboard.route) {
-                            FloatingActionButton(
-                                onClick = { navController.navigate(Route.Care.route) },
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .offset(x = (-24).dp, y = (-72).dp)
-                                    .size(52.dp),
-                                containerColor = LavenderDark,
-                                contentColor = Color.White,
-                                shape = RoundedCornerShape(16.dp)
-                            ) {
-                                Icon(Icons.Rounded.Favorite, "Care", modifier = Modifier.size(24.dp))
-                            }
+                    }
+                    // Floating Care FAB above navbar - only on Home
+                    if (currentRoute == Route.Dashboard.route) {
+                        FloatingActionButton(
+                        onClick = { navController.navigate(Route.Care.route) },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .offset(x = (-24).dp, y = (-72).dp)
+                            .size(52.dp),
+                        containerColor = LavenderDark,
+                        contentColor = Color.White,
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Icon(Icons.Rounded.Favorite, "Care", modifier = Modifier.size(24.dp))
                         }
                     }
                 }
@@ -132,8 +126,8 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
                 val vm: DashboardViewModel = viewModel(factory = VmFactory(appVm.repo))
                 LaunchedEffect(appVm.coupleId) { vm.init(appVm.coupleId) }
                 DashboardScreen(vm = vm, user = currentUser, repo = appVm.repo, onCareClick = {
-                    navController.navigate(Route.Care.route)
-                })
+                        navController.navigate(Route.Care.route)
+                    })
             }
 
             composable(Route.Planner.route) {
@@ -187,7 +181,7 @@ fun PillNavigationBar(
     items: List<BottomNavItem>,
     onNavigate: (String) -> Unit
 ) {
-    val isDark = MaterialTheme.colorScheme.surface == SurfaceDark
+    val isDark = MaterialTheme.colorScheme.surface == com.example.nshutiplanner.ui.theme.SurfaceDark
     val glassBase = if (isDark) Color(0xFF1A1625) else Color(0xFFFFFFFF)
     val glassBorder = if (isDark) Color(0x40B0A8CC) else Color(0x60FFFFFF)
     val glassHighlight = if (isDark) Color(0x15FFFFFF) else Color(0x80FFFFFF)
@@ -197,7 +191,6 @@ fun PillNavigationBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Transparent)
             .padding(horizontal = 20.dp, vertical = 12.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -223,7 +216,9 @@ fun PillNavigationBar(
                 )
                 .border(
                     width = 1.dp,
-                    brush = Brush.verticalGradient(listOf(glassBorder, Color.Transparent)),
+                    brush = Brush.verticalGradient(
+                        listOf(glassBorder, Color.Transparent)
+                    ),
                     shape = RoundedCornerShape(50.dp)
                 )
                 .padding(horizontal = 8.dp, vertical = 8.dp),
@@ -237,7 +232,9 @@ fun PillNavigationBar(
                         modifier = Modifier
                             .clip(RoundedCornerShape(50.dp))
                             .background(
-                                Brush.linearGradient(listOf(activeColor, activeColor.copy(alpha = 0.8f)))
+                                Brush.linearGradient(
+                                    listOf(activeColor, activeColor.copy(alpha = 0.8f))
+                                )
                             )
                             .border(1.dp, Color.White.copy(alpha = 0.25f), RoundedCornerShape(50.dp))
                             .clickable { onNavigate(item.route) }
