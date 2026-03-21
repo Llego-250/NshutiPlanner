@@ -1,5 +1,6 @@
 package com.example.nshutiplanner
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.foundation.layout.offset
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -34,7 +36,10 @@ import com.example.nshutiplanner.ui.screens.tasks.TasksScreen
 import com.example.nshutiplanner.ui.screens.visionboard.VisionBoardScreen
 import com.example.nshutiplanner.ui.theme.LavenderDark
 import com.example.nshutiplanner.ui.theme.NshutiTheme
+import com.example.nshutiplanner.ui.theme.SurfaceDark
 import com.example.nshutiplanner.viewmodel.*
+import com.example.nshutiplanner.viewmodel.DashboardViewModel
+import com.example.nshutiplanner.viewmodel.CareViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,13 +83,13 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
                         onClick = { navController.navigate(Route.Care.route) },
                         modifier = Modifier
                             .align(Alignment.TopEnd)
-                            .offset(x = (-24).dp, y = (-72).dp)
-                            .size(52.dp),
+                            .offset(x = (-24).dp, y = (-92).dp)
+                            .size(64.dp),
                         containerColor = LavenderDark,
                         contentColor = Color.White,
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(20.dp)
                     ) {
-                        Icon(Icons.Rounded.Favorite, "Care", modifier = Modifier.size(24.dp))
+                        Icon(Icons.Rounded.Favorite, "Care", modifier = Modifier.size(30.dp))
                         }
                     }
                 }
@@ -151,9 +156,17 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
             }
 
             composable(Route.Profile.route) {
+                val dashVm: DashboardViewModel = viewModel(factory = VmFactory(appVm.repo))
+                val careVm: CareViewModel = viewModel(factory = VmFactory(appVm.repo))
+                LaunchedEffect(appVm.coupleId) {
+                    dashVm.init(appVm.coupleId)
+                    careVm.init(appVm.coupleId)
+                }
                 ProfileScreen(
                     user = currentUser,
                     repo = appVm.repo,
+                    dashVm = dashVm,
+                    careVm = careVm,
                     darkTheme = darkTheme,
                     onToggleTheme = onToggleTheme,
                     onLogout = {
@@ -162,7 +175,8 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
                             popUpTo(0) { inclusive = true }
                         }
                     },
-                    onCareClick = { navController.navigate(Route.Care.route) }
+                    onCareClick = { navController.navigate(Route.Care.route) },
+                    onUserUpdated = { appVm.loadUser() }
                 )
             }
 
@@ -181,7 +195,7 @@ fun PillNavigationBar(
     items: List<BottomNavItem>,
     onNavigate: (String) -> Unit
 ) {
-    val isDark = MaterialTheme.colorScheme.surface == com.example.nshutiplanner.ui.theme.SurfaceDark
+    val isDark = MaterialTheme.colorScheme.surface == SurfaceDark
     val glassBase = if (isDark) Color(0xFF1A1625) else Color(0xFFFFFFFF)
     val glassBorder = if (isDark) Color(0x40B0A8CC) else Color(0x60FFFFFF)
     val glassHighlight = if (isDark) Color(0x15FFFFFF) else Color(0x80FFFFFF)
@@ -191,17 +205,19 @@ fun PillNavigationBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 12.dp),
+            .padding(horizontal = 20.dp, vertical = 20.dp),
         contentAlignment = Alignment.Center
     ) {
-        // Blur glow behind
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .blur(24.dp)
-                .clip(RoundedCornerShape(50.dp))
-                .background(glassBase.copy(alpha = 0.5f))
-        )
+        // Blur glow behind - only on API 31+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .blur(24.dp)
+                    .clip(RoundedCornerShape(50.dp))
+                    .background(glassBase.copy(alpha = 0.5f))
+            )
+        }
         // Glass pill
         Row(
             modifier = Modifier
@@ -221,8 +237,8 @@ fun PillNavigationBar(
                     ),
                     shape = RoundedCornerShape(50.dp)
                 )
-                .padding(horizontal = 8.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                .padding(horizontal = 12.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             items.forEach { item ->
@@ -238,22 +254,22 @@ fun PillNavigationBar(
                             )
                             .border(1.dp, Color.White.copy(alpha = 0.25f), RoundedCornerShape(50.dp))
                             .clickable { onNavigate(item.route) }
-                            .padding(horizontal = 20.dp, vertical = 12.dp),
+                            .padding(horizontal = 28.dp, vertical = 16.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Icon(item.icon, item.label, tint = Color.White, modifier = Modifier.size(22.dp))
-                        Text(item.label, color = Color.White, style = MaterialTheme.typography.labelLarge)
+                        Icon(item.icon, item.label, tint = Color.White, modifier = Modifier.size(26.dp))
+                        Text(item.label, color = Color.White, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.ExtraBold)
                     }
                 } else {
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(50.dp))
                             .clickable { onNavigate(item.route) }
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                            .padding(horizontal = 20.dp, vertical = 16.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(item.icon, item.label, tint = inactiveColor, modifier = Modifier.size(22.dp))
+                        Icon(item.icon, item.label, tint = inactiveColor, modifier = Modifier.size(26.dp))
                     }
                 }
             }
