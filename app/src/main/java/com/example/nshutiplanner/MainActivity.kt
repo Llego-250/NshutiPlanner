@@ -70,8 +70,9 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
                             restoreState = true
                         }
                     }
-                    // Floating Care FAB above navbar
-                    FloatingActionButton(
+                    // Floating Care FAB above navbar - only on Home
+                    if (currentRoute == Route.Dashboard.route) {
+                        FloatingActionButton(
                         onClick = { navController.navigate(Route.Care.route) },
                         modifier = Modifier
                             .align(Alignment.TopEnd)
@@ -82,6 +83,7 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
                         shape = RoundedCornerShape(16.dp)
                     ) {
                         Icon(Icons.Rounded.Favorite, "Care", modifier = Modifier.size(24.dp))
+                        }
                     }
                 }
             }
