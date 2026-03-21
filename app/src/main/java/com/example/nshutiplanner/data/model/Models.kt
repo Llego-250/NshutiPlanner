@@ -7,7 +7,11 @@ data class User(
     val displayName: String = "",
     val email: String = "",
     val partnerId: String = "",
-    val coupleId: String = ""
+    val coupleId: String = "",
+    val photoUrl: String = "",
+    val motto: String = "",
+    val themeColor: String = "lavender",
+    val currentMood: Int = 3
 )
 
 data class Plan(
