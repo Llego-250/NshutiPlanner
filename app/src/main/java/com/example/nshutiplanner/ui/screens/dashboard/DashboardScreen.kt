@@ -41,19 +41,7 @@ fun DashboardScreen(vm: DashboardViewModel, user: User?, repo: com.example.nshut
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        // Care Button top-left
-        IconButton(
-            onClick = onCareClick,
-            modifier = Modifier
-                .clip(androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
-                .background(LavenderDark)
-                .size(48.dp)
-        ) {
-            Icon(Icons.Rounded.Favorite, "Care", tint = Color.White)
-        }
-
-        Spacer(Modifier.height(12.dp))
-
+        // Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
