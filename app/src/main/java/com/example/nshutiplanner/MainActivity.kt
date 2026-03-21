@@ -14,6 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -58,11 +62,26 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                PillNavigationBar(currentRoute, bottomNavItems) { route ->
-                    navController.navigate(route) {
-                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
+                Box {
+                    PillNavigationBar(currentRoute, bottomNavItems) { route ->
+                        navController.navigate(route) {
+                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                    // Floating Care FAB above navbar
+                    FloatingActionButton(
+                        onClick = { navController.navigate(Route.Care.route) },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .offset(x = (-24).dp, y = (-72).dp)
+                            .size(52.dp),
+                        containerColor = LavenderDark,
+                        contentColor = Color.White,
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Icon(Icons.Rounded.Favorite, "Care", modifier = Modifier.size(24.dp))
                     }
                 }
             }
@@ -124,7 +143,7 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
             composable(Route.VisionBoard.route) {
                 val vm: VisionViewModel = viewModel(factory = VmFactory(appVm.repo))
                 LaunchedEffect(appVm.coupleId) { vm.init(appVm.coupleId) }
-                VisionBoardScreen(vm = vm, currentUid = appVm.repo.currentUid)
+                VisionBoardScreen(vm = vm, currentUid = appVm.repo.currentUid, onBack = { navController.popBackStack() })
             }
 
             composable(Route.Profile.route) {
@@ -146,7 +165,7 @@ fun NshutiApp(darkTheme: Boolean = false, onToggleTheme: () -> Unit = {}) {
             composable(Route.Care.route) {
                 val vm: CareViewModel = viewModel(factory = VmFactory(appVm.repo))
                 LaunchedEffect(appVm.coupleId) { vm.init(appVm.coupleId) }
-                NshutiCareScreen(vm = vm, currentUid = appVm.repo.currentUid)
+                NshutiCareScreen(vm = vm, currentUid = appVm.repo.currentUid, onBack = { navController.popBackStack() })
             }
         }
     }
