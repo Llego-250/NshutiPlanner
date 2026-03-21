@@ -57,7 +57,7 @@ fun DashboardScreen(vm: DashboardViewModel, user: User?, repo: com.example.nshut
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Brush.horizontalGradient(listOf(LavenderLight, TealLight)), RoundedCornerShape(24.dp))
+                .background(Brush.horizontalGradient(listOf(adaptiveLavenderLight(), adaptiveTealLight())), RoundedCornerShape(24.dp))
                 .padding(20.dp)
         ) {
             Column {
@@ -97,8 +97,8 @@ fun DashboardScreen(vm: DashboardViewModel, user: User?, repo: com.example.nshut
 
         // Quick Stats
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            StatCard("Plans", plans.size, plans.count { it.isCompleted }, LavenderLight, LavenderDark, Modifier.weight(1f))
-            StatCard("Tasks", tasks.size, tasks.count { it.isCompleted }, TealLight, TealDark, Modifier.weight(1f))
+            StatCard("Plans", plans.size, plans.count { it.isCompleted }, adaptiveLavenderLight(), LavenderDark, Modifier.weight(1f))
+            StatCard("Tasks", tasks.size, tasks.count { it.isCompleted }, adaptiveTealLight(), TealDark, Modifier.weight(1f))
         }
 
         Spacer(Modifier.height(16.dp))
@@ -110,7 +110,7 @@ fun DashboardScreen(vm: DashboardViewModel, user: User?, repo: com.example.nshut
                 items(badges) { BadgeChip(it) }
             }
         } else {
-            NshutiCard(color = SoftYellow.copy(alpha = 0.4f)) {
+            NshutiCard(color = adaptiveSoftYellow().copy(alpha = 0.4f)) {
                 Text("🎯 Complete tasks and plans to earn badges!", style = MaterialTheme.typography.bodyMedium)
             }
         }
