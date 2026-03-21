@@ -2,8 +2,10 @@ package com.example.nshutiplanner.ui.screens.auth
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material3.*
@@ -128,37 +130,46 @@ fun RegisterScreen(repo: FirebaseRepository, onRegister: () -> Unit, onGoLogin: 
 @Composable
 private fun AuthScaffold(content: @Composable ColumnScope.() -> Unit) {
     Box(
-        modifier = Modifier.fillMaxSize().background(
-            Brush.verticalGradient(
-                colors = listOf(
-                    Indigo900,
-                    Indigo700,
-                    MaterialTheme.colorScheme.background
-                ),
-                startY = 0f,
-                endY = 1200f
-            )
-        ),
-        contentAlignment = Alignment.Center
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth().padding(24.dp),
-            shape = RoundedCornerShape(32.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(28.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    Icons.Rounded.Favorite,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(80.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(Indigo900, Indigo700, MaterialTheme.colorScheme.background),
+                    startY = 0f,
+                    endY = 1200f
                 )
-                Spacer(Modifier.height(24.dp))
-                content()
+            )
+            .imePadding() // push content above keyboard
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(32.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(28.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        Icons.Rounded.Favorite,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(80.dp)
+                    )
+                    Spacer(Modifier.height(24.dp))
+                    content()
+                }
             }
         }
     }
