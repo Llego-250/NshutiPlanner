@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.example.nshutiplanner.ui.theme.*
+import com.example.nshutiplanner.unity.UnityBridgeActivity
 import com.example.nshutiplanner.viewmodel.ErrorKind
 import com.example.nshutiplanner.viewmodel.LocationUiState
 import com.example.nshutiplanner.viewmodel.LocationViewModel
@@ -138,8 +139,18 @@ fun LocationScreen(viewModel: LocationViewModel) {
             text = "Find & Vibrate",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 8.dp)
         )
+
+        OutlinedButton(
+            onClick = { context.startActivity(UnityBridgeActivity.newIntent(context)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Text("Unity 3D View")
+        }
 
         when {
             permissionDenied -> PermissionDeniedCard(context = context)
