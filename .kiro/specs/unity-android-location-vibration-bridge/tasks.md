@@ -159,7 +159,7 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
 - [ ] 11. Checkpoint — Unity side complete
   - Ensure all C# EditMode tests pass, ask the user if questions arise.
 
-- [-] 12. Wire Android launch from `MainActivity`
+- [x] 12. Wire Android launch from `MainActivity`
   - In `MainActivity.kt`, add a navigation entry or button that launches `UnityBridgeActivity` via `UnityBridgeActivity.newIntent(context)`
   - Confirm the explicit `Intent` correctly starts the Unity runtime
   - _Requirements: 5.5_
