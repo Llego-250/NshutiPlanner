@@ -38,8 +38,8 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - Use kotest; generate random API-level scenarios with mocked `Vibrator`/`VibratorManager`; assert no exception is thrown across ≥100 iterations
     - File: `app/src/test/java/com/example/nshutiplanner/unity/UnityBridgeTest.kt`
 
-- [-] 4. Implement `UnityBridge.kt` — location fetch method
-  - [-] 4.1 Add `@JvmStatic fun fetchLocationByEmail(email: String, callbackObjectName: String, callbackMethodName: String)` to `UnityBridge`
+- [x] 4. Implement `UnityBridge.kt` — location fetch method
+  - [x] 4.1 Add `@JvmStatic fun fetchLocationByEmail(email: String, callbackObjectName: String, callbackMethodName: String)` to `UnityBridge`
     - Launch a `CoroutineScope(Dispatchers.IO)` coroutine
     - Query Firestore `users` collection with `whereEqualTo("email", email).limit(1)`; if empty, call `UnitySendMessage` with `BridgeResponse(success=false, error="User not found for email: $email").toJson()`
     - If user found, query `locations/{uid}`; if missing, call `UnitySendMessage` with `BridgeResponse(success=false, error="Location not available for user").toJson()`
@@ -59,7 +59,7 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - Use kotest; generate random unknown emails, missing-location scenarios, and random exception messages; assert `success=false` and non-empty `error` in all cases across ≥100 iterations
     - File: `app/src/test/java/com/example/nshutiplanner/unity/UnityBridgeTest.kt`
 
-- [~] 5. Implement `UnityBridgeActivity.kt`
+- [x] 5. Implement `UnityBridgeActivity.kt`
   - Create `app/src/main/java/com/example/nshutiplanner/unity/UnityBridgeActivity.kt`
   - Extend `UnityPlayerActivity` (from the Unity `.aar`); no additional logic required
   - Add an `Intent`-launching helper `companion object { fun newIntent(context: Context): Intent }` for use from `MainActivity`
@@ -68,7 +68,7 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
 - [ ] 6. Checkpoint — Android side complete
   - Ensure all Kotlin unit tests pass, ask the user if questions arise.
 
-- [~] 7. Implement Unity C# `BridgeResponse.cs`
+- [x] 7. Implement Unity C# `BridgeResponse.cs`
   - Create `Assets/Scripts/BridgeResponse.cs`
   - Define `[Serializable] public class BridgeResponse` with fields: `public bool success`, `public double latitude`, `public double longitude`, `public string displayName`, `public string error`
   - No methods needed; deserialization is via `JsonUtility.FromJson<BridgeResponse>`
@@ -79,8 +79,8 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - **Validates: Requirements 7.3, 7.4**
     - File: `Assets/Tests/EditMode/AndroidBridgeTests.cs`; use a loop of ≥100 random instances; serialize with `JsonUtility.ToJson`, deserialize with `JsonUtility.FromJson`; assert all fields equal
 
-- [~] 8. Implement Unity C# `AndroidBridge.cs`
-  - [~] 8.1 Create `Assets/Scripts/AndroidBridge.cs` as a `MonoBehaviour`
+- [x] 8. Implement Unity C# `AndroidBridge.cs`
+  - [x] 8.1 Create `Assets/Scripts/AndroidBridge.cs` as a `MonoBehaviour`
     - Add `[SerializeField]` fields: `stubSuccess`, `stubLatitude` (default `-1.9441`), `stubLongitude` (default `30.0619`), `stubDisplayName` (default `"Test Partner"`)
     - Implement `public void FetchLocation(string email, Action<BridgeResponse> callback)`:
       - `#if UNITY_ANDROID && !UNITY_EDITOR`: instantiate `AndroidJavaObject("com.example.nshutiplanner.unity.UnityBridge")`, call `fetchLocationByEmail(email, gameObject.name, "OnLocationReceived")`; store callback for `OnLocationReceived`
@@ -107,8 +107,8 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - **Validates: Requirements 6.6**
     - Intercept `Debug.LogError` calls during simulated error conditions; assert all messages start with `"[AndroidBridge]"`
 
-- [~] 9. Implement Unity C# `FindAndVibrateHandler.cs`
-  - [~] 9.1 Create `Assets/Scripts/FindAndVibrateHandler.cs` as a `MonoBehaviour`
+- [x] 9. Implement Unity C# `FindAndVibrateHandler.cs`
+  - [x] 9.1 Create `Assets/Scripts/FindAndVibrateHandler.cs` as a `MonoBehaviour`
     - Add `[SerializeField]` references: `AndroidBridge bridge`, `Button navbarButton`, `TextMeshProUGUI statusLabel`, `GameObject locationMarkerPrefab`, `Transform mapPlane`
     - Add `[SerializeField]` GPS origin and scale fields: `double originLatitude`, `double originLongitude`, `float metresPerUnit` (default `1.0`)
     - Add `[SerializeField] string targetEmail` for the email to look up
@@ -147,7 +147,7 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - **Validates: Requirements 4.4**
     - Generate sequences of 1–20 successful `BridgeResponse` objects; assert marker count in scene is always 1 after each response
 
-- [~] 10. Set up Unity scene `UnityLocationScene`
+- [x] 10. Set up Unity scene `UnityLocationScene`
   - Create `Assets/Scenes/UnityLocationScene.unity`
   - Add a Canvas (Screen Space – Overlay) with a `NavbarButton` (uGUI `Button`) and a `TextMeshProUGUI` status label
   - Add a flat quad as the map plane in world space
@@ -159,7 +159,7 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
 - [ ] 11. Checkpoint — Unity side complete
   - Ensure all C# EditMode tests pass, ask the user if questions arise.
 
-- [~] 12. Wire Android launch from `MainActivity`
+- [-] 12. Wire Android launch from `MainActivity`
   - In `MainActivity.kt`, add a navigation entry or button that launches `UnityBridgeActivity` via `UnityBridgeActivity.newIntent(context)`
   - Confirm the explicit `Intent` correctly starts the Unity runtime
   - _Requirements: 5.5_
