@@ -6,7 +6,7 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
 
 ## Tasks
 
-- [~] 1. Configure Android build and manifest for Unity integration
+- [-] 1. Configure Android build and manifest for Unity integration
   - Add Unity `.aar` as a `flatDir` repository and `implementation` dependency in `app/build.gradle.kts`
   - Add `UnityBridgeActivity` entry to `AndroidManifest.xml` with `android:configChanges` covering `orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode`
   - Confirm `VIBRATE`, `ACCESS_FINE_LOCATION`, and `ACCESS_COARSE_LOCATION` permissions are present (already declared; verify they are retained)
@@ -108,7 +108,7 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - Intercept `Debug.LogError` calls during simulated error conditions; assert all messages start with `"[AndroidBridge]"`
 
 - [~] 9. Implement Unity C# `FindAndVibrateHandler.cs`
-  - [ ] 9.1 Create `Assets/Scripts/FindAndVibrateHandler.cs` as a `MonoBehaviour`
+  - [~] 9.1 Create `Assets/Scripts/FindAndVibrateHandler.cs` as a `MonoBehaviour`
     - Add `[SerializeField]` references: `AndroidBridge bridge`, `Button navbarButton`, `TextMeshProUGUI statusLabel`, `GameObject locationMarkerPrefab`, `Transform mapPlane`
     - Add `[SerializeField]` GPS origin and scale fields: `double originLatitude`, `double originLongitude`, `float metresPerUnit` (default `1.0`)
     - Add `[SerializeField] string targetEmail` for the email to look up
@@ -147,7 +147,7 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - **Validates: Requirements 4.4**
     - Generate sequences of 1–20 successful `BridgeResponse` objects; assert marker count in scene is always 1 after each response
 
-- [ ] 10. Set up Unity scene `UnityLocationScene`
+- [~] 10. Set up Unity scene `UnityLocationScene`
   - Create `Assets/Scenes/UnityLocationScene.unity`
   - Add a Canvas (Screen Space – Overlay) with a `NavbarButton` (uGUI `Button`) and a `TextMeshProUGUI` status label
   - Add a flat quad as the map plane in world space
@@ -159,7 +159,7 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
 - [ ] 11. Checkpoint — Unity side complete
   - Ensure all C# EditMode tests pass, ask the user if questions arise.
 
-- [ ] 12. Wire Android launch from `MainActivity`
+- [~] 12. Wire Android launch from `MainActivity`
   - In `MainActivity.kt`, add a navigation entry or button that launches `UnityBridgeActivity` via `UnityBridgeActivity.newIntent(context)`
   - Confirm the explicit `Intent` correctly starts the Unity runtime
   - _Requirements: 5.5_
