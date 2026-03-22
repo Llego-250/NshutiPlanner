@@ -27,4 +27,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "NshutiPlanner"
 include(":app")
+include(":unitybridge")
  
