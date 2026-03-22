@@ -4,6 +4,12 @@ plugins {
     alias(libs.plugins.google.services)
 }
 
+// Unity .aar integration: place the Unity-exported .aar in app/libs/ and uncomment the
+// dependency line in the dependencies block below.
+repositories {
+    flatDir { dirs("libs") }
+}
+
 android {
     namespace = "com.example.nshutiplanner"
     compileSdk = 35
@@ -73,6 +79,9 @@ dependencies {
     // Play Services & AR
     implementation(libs.play.services.location)
     implementation(libs.google.arcore)
+
+    // Unity .aar — place the exported .aar in app/libs/ and uncomment the line below:
+    // implementation(name = "unity-classes", ext = "aar")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
