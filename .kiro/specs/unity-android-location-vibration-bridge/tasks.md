@@ -6,14 +6,14 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
 
 ## Tasks
 
-- [-] 1. Configure Android build and manifest for Unity integration
+- [x] 1. Configure Android build and manifest for Unity integration
   - Add Unity `.aar` as a `flatDir` repository and `implementation` dependency in `app/build.gradle.kts`
   - Add `UnityBridgeActivity` entry to `AndroidManifest.xml` with `android:configChanges` covering `orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode`
   - Confirm `VIBRATE`, `ACCESS_FINE_LOCATION`, and `ACCESS_COARSE_LOCATION` permissions are present (already declared; verify they are retained)
   - _Requirements: 5.1, 5.2, 5.3, 5.4_
 
-- [~] 2. Implement Kotlin `BridgeResponse` data class and JSON serialization
-  - [~] 2.1 Create `app/src/main/java/com/example/nshutiplanner/unity/BridgeResponse.kt`
+- [x] 2. Implement Kotlin `BridgeResponse` data class and JSON serialization
+  - [x] 2.1 Create `app/src/main/java/com/example/nshutiplanner/unity/BridgeResponse.kt`
     - Define `data class BridgeResponse(val success: Boolean, val latitude: Double, val longitude: Double, val displayName: String, val error: String)` with defaults
     - Add `fun toJson(): String` using `org.json.JSONObject` to serialize all five fields
     - Add `companion object { fun fromJson(json: String): BridgeResponse }` for symmetry
@@ -25,8 +25,8 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - Use kotest property testing; generate random `BridgeResponse` instances; serialize with `toJson()`, deserialize with `fromJson()`; assert all fields equal
     - File: `app/src/test/java/com/example/nshutiplanner/unity/UnityBridgeTest.kt`
 
-- [~] 3. Implement `UnityBridge.kt` — vibration method
-  - [~] 3.1 Create `app/src/main/java/com/example/nshutiplanner/unity/UnityBridge.kt` with `triggerVibration()`
+- [x] 3. Implement `UnityBridge.kt` — vibration method
+  - [x] 3.1 Create `app/src/main/java/com/example/nshutiplanner/unity/UnityBridge.kt` with `triggerVibration()`
     - Implement `companion object` with `@JvmStatic fun triggerVibration(context: Context)`
     - Mirror the three-branch vibration logic from `NshutiFirebaseMessagingService.triggerHapticPulse()`: API 31+ (`VibratorManager`), API 26–30 (`VibrationEffect`), legacy (`vibrate(500)`)
     - Guard: if vibrator service is null or `VIBRATE` permission absent, log with `Log.w` and return without throwing
@@ -38,8 +38,8 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - Use kotest; generate random API-level scenarios with mocked `Vibrator`/`VibratorManager`; assert no exception is thrown across ≥100 iterations
     - File: `app/src/test/java/com/example/nshutiplanner/unity/UnityBridgeTest.kt`
 
-- [~] 4. Implement `UnityBridge.kt` — location fetch method
-  - [~] 4.1 Add `@JvmStatic fun fetchLocationByEmail(email: String, callbackObjectName: String, callbackMethodName: String)` to `UnityBridge`
+- [-] 4. Implement `UnityBridge.kt` — location fetch method
+  - [-] 4.1 Add `@JvmStatic fun fetchLocationByEmail(email: String, callbackObjectName: String, callbackMethodName: String)` to `UnityBridge`
     - Launch a `CoroutineScope(Dispatchers.IO)` coroutine
     - Query Firestore `users` collection with `whereEqualTo("email", email).limit(1)`; if empty, call `UnitySendMessage` with `BridgeResponse(success=false, error="User not found for email: $email").toJson()`
     - If user found, query `locations/{uid}`; if missing, call `UnitySendMessage` with `BridgeResponse(success=false, error="Location not available for user").toJson()`
