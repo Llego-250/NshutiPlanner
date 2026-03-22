@@ -38,8 +38,8 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - Use kotest; generate random API-level scenarios with mocked `Vibrator`/`VibratorManager`; assert no exception is thrown across ≥100 iterations
     - File: `app/src/test/java/com/example/nshutiplanner/unity/UnityBridgeTest.kt`
 
-- [-] 4. Implement `UnityBridge.kt` — location fetch method
-  - [-] 4.1 Add `@JvmStatic fun fetchLocationByEmail(email: String, callbackObjectName: String, callbackMethodName: String)` to `UnityBridge`
+- [x] 4. Implement `UnityBridge.kt` — location fetch method
+  - [x] 4.1 Add `@JvmStatic fun fetchLocationByEmail(email: String, callbackObjectName: String, callbackMethodName: String)` to `UnityBridge`
     - Launch a `CoroutineScope(Dispatchers.IO)` coroutine
     - Query Firestore `users` collection with `whereEqualTo("email", email).limit(1)`; if empty, call `UnitySendMessage` with `BridgeResponse(success=false, error="User not found for email: $email").toJson()`
     - If user found, query `locations/{uid}`; if missing, call `UnitySendMessage` with `BridgeResponse(success=false, error="Location not available for user").toJson()`
@@ -59,7 +59,7 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - Use kotest; generate random unknown emails, missing-location scenarios, and random exception messages; assert `success=false` and non-empty `error` in all cases across ≥100 iterations
     - File: `app/src/test/java/com/example/nshutiplanner/unity/UnityBridgeTest.kt`
 
-- [~] 5. Implement `UnityBridgeActivity.kt`
+- [-] 5. Implement `UnityBridgeActivity.kt`
   - Create `app/src/main/java/com/example/nshutiplanner/unity/UnityBridgeActivity.kt`
   - Extend `UnityPlayerActivity` (from the Unity `.aar`); no additional logic required
   - Add an `Intent`-launching helper `companion object { fun newIntent(context: Context): Intent }` for use from `MainActivity`
