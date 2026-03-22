@@ -19,6 +19,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // Unity .aar integration: place the Unity-exported .aar in app/libs/ and uncomment
+        // the implementation line in app/build.gradle.kts dependencies block.
+        flatDir { dirs("app/libs") }
     }
 }
 

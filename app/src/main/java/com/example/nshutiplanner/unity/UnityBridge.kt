@@ -13,25 +13,25 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-// UnityPlayer is provided at runtime when the Unity .aar is linked as a dependency.
-// It is not available at compile time in a standard Android project build.
-// Add the Unity .aar to build.gradle (flatDir / implementation files(...)) to resolve this import.
-import com.unity3d.player.UnityPlayer
+import java.lang.reflect.Method
 
 class UnityBridge {
     companion object {
         private const val TAG = "UnityBridge"
 
         /**
-         * Fetches the GPS location for the user identified by [email] from Firestore and
-         * delivers the result back to Unity via [UnityPlayer.UnitySendMessage].
-         *
-         * Firestore path:
-         *   users → where("email", ==, email) → limit(1) → get uid / displayName
-         *   locations/{uid} → get latitude / longitude
-         *
-         * Requirements: 3.2, 3.3, 3.4, 6.1, 6.2, 6.3
+         * Safely sends a message to Unity using reflection to avoid compile-time dependency on UnityPlayer.
          */
+        private fun unitySendMessage(obj: String, method: String, msg: String) {
+            try {
+                val cls = Class.forName("com.unity3d.player.UnityPlayer")
+                val methodObj: Method = cls.getMethod("UnitySendMessage", String::class.java, String::class.java, String::class.java)
+                methodObj.invoke(null, obj, method, msg)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to send message to Unity: ${e.message}")
+            }
+        }
+
         @JvmStatic
         fun fetchLocationByEmail(
             context: Context,
@@ -43,7 +43,6 @@ class UnityBridge {
                 try {
                     val db = FirebaseFirestore.getInstance()
 
-                    // Step 1: resolve user by email
                     val userQuery = db.collection("users")
                         .whereEqualTo("email", email)
                         .limit(1)
@@ -55,7 +54,7 @@ class UnityBridge {
                             success = false,
                             error = "User not found for email: $email"
                         ).toJson()
-                        UnityPlayer.UnitySendMessage(callbackObjectName, callbackMethodName, json)
+                        unitySendMessage(callbackObjectName, callbackMethodName, json)
                         return@launch
                     }
 
@@ -63,7 +62,6 @@ class UnityBridge {
                     val uid = userDoc.id
                     val displayName = userDoc.getString("displayName") ?: ""
 
-                    // Step 2: fetch location record
                     val locationDoc = db.collection("locations")
                         .document(uid)
                         .get()
@@ -74,7 +72,7 @@ class UnityBridge {
                             success = false,
                             error = "Location not available for user"
                         ).toJson()
-                        UnityPlayer.UnitySendMessage(callbackObjectName, callbackMethodName, json)
+                        unitySendMessage(callbackObjectName, callbackMethodName, json)
                         return@launch
                     }
 
@@ -87,7 +85,7 @@ class UnityBridge {
                         longitude = lng,
                         displayName = displayName
                     ).toJson()
-                    UnityPlayer.UnitySendMessage(callbackObjectName, callbackMethodName, json)
+                    unitySendMessage(callbackObjectName, callbackMethodName, json)
 
                 } catch (e: Exception) {
                     Log.e(TAG, "fetchLocationByEmail failed", e)
@@ -95,7 +93,7 @@ class UnityBridge {
                         success = false,
                         error = e.message ?: "Unknown error"
                     ).toJson()
-                    UnityPlayer.UnitySendMessage(callbackObjectName, callbackMethodName, json)
+                    unitySendMessage(callbackObjectName, callbackMethodName, json)
                 }
             }
         }
@@ -103,7 +101,6 @@ class UnityBridge {
         @JvmStatic
         @Suppress("DEPRECATION")
         fun triggerVibration(context: Context) {
-            // Guard: check VIBRATE permission
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.VIBRATE)
                 != android.content.pm.PackageManager.PERMISSION_GRANTED
             ) {
@@ -111,33 +108,26 @@ class UnityBridge {
                 return
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                // API 31+: use VibratorManager
-                val vibratorManager =
-                    context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
-                if (vibratorManager == null) {
-                    Log.w(TAG, "Vibrator service unavailable")
-                    return
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
+                    if (vibratorManager != null) {
+                        val effect = VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)
+                        val combinedVibration = android.os.CombinedVibration.createParallel(effect)
+                        vibratorManager.vibrate(combinedVibration)
+                    }
+                } else {
+                    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+                    if (vibrator != null) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+                        } else {
+                            vibrator.vibrate(500)
+                        }
+                    }
                 }
-                val effect = VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)
-                val combinedVibration = android.os.CombinedVibration.createParallel(effect)
-                vibratorManager.vibrate(combinedVibration)
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // API 26–30: use VibrationEffect
-                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
-                if (vibrator == null) {
-                    Log.w(TAG, "Vibrator service unavailable")
-                    return
-                }
-                vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
-            } else {
-                // Legacy: API < 26
-                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
-                if (vibrator == null) {
-                    Log.w(TAG, "Vibrator service unavailable")
-                    return
-                }
-                vibrator.vibrate(500)
+            } catch (e: Exception) {
+                Log.e(TAG, "Vibration failed", e)
             }
         }
     }
