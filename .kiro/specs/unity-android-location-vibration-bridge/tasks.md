@@ -68,7 +68,7 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
 - [ ] 6. Checkpoint — Android side complete
   - Ensure all Kotlin unit tests pass, ask the user if questions arise.
 
-- [ ] 7. Implement Unity C# `BridgeResponse.cs`
+- [~] 7. Implement Unity C# `BridgeResponse.cs`
   - Create `Assets/Scripts/BridgeResponse.cs`
   - Define `[Serializable] public class BridgeResponse` with fields: `public bool success`, `public double latitude`, `public double longitude`, `public string displayName`, `public string error`
   - No methods needed; deserialization is via `JsonUtility.FromJson<BridgeResponse>`
@@ -79,8 +79,8 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - **Validates: Requirements 7.3, 7.4**
     - File: `Assets/Tests/EditMode/AndroidBridgeTests.cs`; use a loop of ≥100 random instances; serialize with `JsonUtility.ToJson`, deserialize with `JsonUtility.FromJson`; assert all fields equal
 
-- [ ] 8. Implement Unity C# `AndroidBridge.cs`
-  - [ ] 8.1 Create `Assets/Scripts/AndroidBridge.cs` as a `MonoBehaviour`
+- [~] 8. Implement Unity C# `AndroidBridge.cs`
+  - [~] 8.1 Create `Assets/Scripts/AndroidBridge.cs` as a `MonoBehaviour`
     - Add `[SerializeField]` fields: `stubSuccess`, `stubLatitude` (default `-1.9441`), `stubLongitude` (default `30.0619`), `stubDisplayName` (default `"Test Partner"`)
     - Implement `public void FetchLocation(string email, Action<BridgeResponse> callback)`:
       - `#if UNITY_ANDROID && !UNITY_EDITOR`: instantiate `AndroidJavaObject("com.example.nshutiplanner.unity.UnityBridge")`, call `fetchLocationByEmail(email, gameObject.name, "OnLocationReceived")`; store callback for `OnLocationReceived`
@@ -107,7 +107,7 @@ Implement the bidirectional Kotlin↔Unity bridge by building the Android-side K
     - **Validates: Requirements 6.6**
     - Intercept `Debug.LogError` calls during simulated error conditions; assert all messages start with `"[AndroidBridge]"`
 
-- [ ] 9. Implement Unity C# `FindAndVibrateHandler.cs`
+- [~] 9. Implement Unity C# `FindAndVibrateHandler.cs`
   - [ ] 9.1 Create `Assets/Scripts/FindAndVibrateHandler.cs` as a `MonoBehaviour`
     - Add `[SerializeField]` references: `AndroidBridge bridge`, `Button navbarButton`, `TextMeshProUGUI statusLabel`, `GameObject locationMarkerPrefab`, `Transform mapPlane`
     - Add `[SerializeField]` GPS origin and scale fields: `double originLatitude`, `double originLongitude`, `float metresPerUnit` (default `1.0`)
