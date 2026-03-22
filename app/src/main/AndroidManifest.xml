@@ -45,5 +45,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBdtGTYZRoCEcjdGtXN_K9LfVdTXbZOLAg" />
 
+        <!-- Unity bridge activity: hosts the Unity runtime for the 3D location scene -->
+        <activity
+            android:name=".unity.UnityBridgeActivity"
+            android:exported="false"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" />
+
     </application>
 </manifest>
