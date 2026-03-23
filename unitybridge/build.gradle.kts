@@ -36,8 +36,6 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
 
-    // UnityPlayer.UnitySendMessage is provided at runtime via the Unity .aar.
-    // It is NOT a compile-time dependency of this library module.
-    // The Unity .aar must be present in the consuming app's libs/ folder.
-    compileOnly(files("libs/unity-classes.jar")) // stub jar if available, otherwise remove
+    // UnityPlayer.UnitySendMessage is resolved at runtime via reflection.
+    // No compile-time dependency on Unity is needed here.
 }
