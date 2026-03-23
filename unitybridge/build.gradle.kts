@@ -35,6 +35,8 @@ dependencies {
     // Firebase — needed by UnityBridge.fetchLocationByEmail
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
+    implementation("com.google.firebase:firebase-common-ktx")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 
     // UnityPlayer.UnitySendMessage is resolved at runtime via reflection.
     // No compile-time dependency on Unity is needed here.
