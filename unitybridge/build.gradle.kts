@@ -34,12 +34,12 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.coroutines.android)
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
     // Firebase — needed by UnityBridge.fetchLocationByEmail
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.firestore)
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.google.firebase:firebase-firestore-ktx")
     
     // Explicitly add common and play services for 'await()' support
     implementation("com.google.firebase:firebase-common-ktx:21.0.0")
