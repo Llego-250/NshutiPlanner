@@ -285,6 +285,30 @@ fun LocationScreen(viewModel: LocationViewModel) {
 }
 
 @Composable
+private fun NoPartnerCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            Text(
+                text = "No Partner Linked",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = "Go to the Home screen and tap \"Link Partner\" to connect with your partner before using Find & Vibrate.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
+    }
+}
+
+@Composable
 private fun PermissionDeniedCard(context: Context) {
     Card(
         modifier = Modifier.fillMaxWidth(),
