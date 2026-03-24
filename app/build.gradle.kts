@@ -33,7 +33,7 @@ android {
 
     buildFeatures { compose = true }
 
-    composeOptions { kotlinCompilerExtensionVersion = "1.5.14" }
+    composeOptions { kotlinCompilerExtensionVersion = "1.5.15" }
 }
 
 dependencies {
@@ -59,6 +59,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
     implementation(libs.firebase.messaging)
 
     // Coil
@@ -72,6 +73,7 @@ dependencies {
 
     // Play Services & AR
     implementation(libs.play.services.location)
+    implementation(libs.play.services.maps)
     implementation(libs.google.arcore)
 
     // Unity .aar — place the exported .aar in app/libs/ and uncomment the line below:
