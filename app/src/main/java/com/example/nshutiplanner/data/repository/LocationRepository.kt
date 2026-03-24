@@ -28,6 +28,9 @@ class LocationRepository {
      * Resolves the current user (SENDER) and their partner (RECEIVER) as Actor objects.
      */
     suspend fun resolveActors(currentUser: User): Pair<Actor, Actor> {
+        if (currentUser.partnerId.isBlank()) {
+            throw Exception("You haven't linked a partner yet. Go to Dashboard → Link Partner.")
+        }
         val partnerDoc = db.collection("users")
             .document(currentUser.partnerId)
             .get()
