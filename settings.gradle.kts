@@ -23,14 +23,8 @@ dependencyResolutionManagement {
         // the implementation line in app/build.gradle.kts dependencies block.
         flatDir { dirs("app/libs") }
     }
-    versionCatalogs {
-        create("libs") {
-            from(files("gradle/libs.versions.toml"))
-        }
-    }
 }
 
 rootProject.name = "NshutiPlanner"
 include(":app")
 include(":unitybridge")
- 
