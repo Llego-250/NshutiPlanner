@@ -201,7 +201,11 @@ fun LocationScreen(viewModel: LocationViewModel) {
                     is LocationUiState.Error -> {
                         val err = uiState as LocationUiState.Error
                         Log.d(TAG, "Rendering error card: ${err.message}")
-                        ErrorCard(uiState = err, onRetry = { viewModel.resetToIdle() })
+                        if (err.kind == ErrorKind.WRITE_FAILED && err.message.contains("partner", ignoreCase = true)) {
+                            NoPartnerCard()
+                        } else {
+                            ErrorCard(uiState = err, onRetry = { viewModel.resetToIdle() })
+                        }
                     }
 
                     is LocationUiState.Success -> {
