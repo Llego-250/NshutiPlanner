@@ -76,8 +76,8 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.google.arcore)
 
-    // Unity .aar — place the exported .aar in app/libs/ and uncomment the line below:
-    // implementation(name = "unity-classes", ext = "aar")
+    // Unity .aar — place the exported .aar in app/libs/ then sync
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar", "*.jar"))))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
